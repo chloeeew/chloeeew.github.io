@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
-    <title>Gridea</title>
-    <updated>2021-07-28T06:27:02.274Z</updated>
+    <title>Notes of Chloe</title>
+    <updated>2021-07-28T07:12:10.542Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
-    <subtitle>温故而知新</subtitle>
+    <subtitle>Though not be given a head start, but trying to stand out from my peers</subtitle>
     <logo>https://chloeeew.github.io/images/avatar.png</logo>
     <icon>https://chloeeew.github.io/favicon.ico</icon>
-    <rights>All rights reserved 2021, Gridea</rights>
+    <rights>All rights reserved 2021, Notes of Chloe</rights>
     <entry>
         <title type="html"><![CDATA[Hello Gridea]]></title>
         <id>https://chloeeew.github.io/post/hello-gridea/</id>
