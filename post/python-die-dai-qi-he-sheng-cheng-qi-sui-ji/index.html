@@ -1,0 +1,403 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python 迭代器和生成器随记 | Notes of Chloe</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1627976096224">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Python 迭代器和生成器随记 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="迭代器
+迭代协议
+
+迭代协议：对象定义了一个__iter__方法的
+可迭代对象iterable：能够使用for循环进行遍历的，该对象能够进行for循环或map函数等等
+
+其内部实现了一个迭代协议：实现方式：对象内部定义了一个__iter__..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1627976096224" alt="">
+  </a>
+  <h1 class="site-title">
+    Notes of Chloe
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Python 迭代器和生成器随记
+            </h2>
+            <div class="post-info">
+              <span>
+                08-03
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="迭代器">迭代器</h1>
+<h2 id="迭代协议">迭代协议</h2>
+<ul>
+<li>迭代协议：对象定义了一个__iter__方法的</li>
+<li>可迭代对象iterable：能够使用for循环进行遍历的，该对象能够进行for循环或map函数等等
+<ul>
+<li>其内部实现了一个迭代协议：实现方式：对象内部定义了一个__iter__()方法（只要有这个方法就实现了迭代协议<br>
+常见的可迭代对象有list、str、tuple</li>
+</ul>
+</li>
+</ul>
+<pre><code># 判断是否为可迭代对象：
+dir(list) # 查看是否有__iter__
+hasattr(list,'__iter__')
+</code></pre>
+<h2 id="迭代器协议">迭代器协议</h2>
+<h4 id="迭代器是特殊的可迭代对象">迭代器是特殊的可迭代对象</h4>
+<ul>
+<li>迭代器对象还实现了__next__方法（迭代器除了有__iter__属性还有 __next__是属性）</li>
+<li>迭代器可以被for迭代，for迭代迭代器时，会执行__next__方法</li>
+<li>核心：通过__next__方法记住迭代的位置，有没有迭代完毕</li>
+<li>__next__方法需要在值取完的时候，抛出StopIteration的错误信息<br>
+所有的可迭代对象都可以转化为迭代器</li>
+</ul>
+<pre><code>迭代器 = iter(可迭代对象)
+
+# 例子
+li = [1,2,3,4,5]
+li_iterator = iter(li)
+print(li_iterator)
+
+# 运行结果
+&lt;list_iterator object at 0x000001F4A9F292B0&gt;
+</code></pre>
+<h4 id="迭代器与可迭代对象的区别">迭代器与可迭代对象的区别</h4>
+<ul>
+<li>区别是迭代器可以使用内置的next函数</li>
+</ul>
+<pre><code>print(next(li_iterator))
+print(next(li_iterator))
+print(next(li_iterator))
+print(next(li_iterator))
+print(next(li_iterator))
+
+# 运行结果
+1
+2
+3
+4
+5
+</code></pre>
+<p>注意点：当使用next获取完迭代器中所有的元素后，再次使用next进行迭代会抛出迭代器停止的异常</p>
+<h4 id="迭代器实现思想可迭代对象">迭代器实现思想（可迭代对象）</h4>
+<pre><code>class Next:
+    def __init__(self,stop,start=-1):
+        self.start = start
+        self.stop = stop
+
+    def __next__(self):
+        if self.start &gt;= self.stop-1:
+            raise StopIteration
+        self.start += 1
+        return self.start
+
+class MyRange:
+    def __init__(self,stop):
+        self.stop = stop
+
+    def __iter__(self):
+        return Next(self.stop)
+
+
+if __name__ == &quot;__main__&quot;:
+    print([i for i in MyRange(10)])
+    
+# 运行结果
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+</code></pre>
+<p>注意：从以上可以看出来，__iter__方法要求返回值必须有__next__方法</p>
+<ul>
+<li>而传统的range实现原理如下：</li>
+</ul>
+<pre><code>def range_test(stop):
+    start = 0
+    result = []
+    while start &lt; stop:
+        result.append(start)
+        start += 1
+    return result    
+</code></pre>
+<h3 id="迭代器使用场景及使用迭代器有什么好处">迭代器使用场景及使用迭代器有什么好处？</h3>
+<p>在大批量存储数据的时候，迭代器可以帮助我们节约内存，需要的时候才会生成这个数<br>
+例如，一个列表中有1w个数据，那它要把这1w数据都存下来，[1,2,3,....10000],它占用的内存空间比较大。</p>
+<ul>
+<li><strong>总结：迭代器的特点有延迟生成数据，节省内存</strong></li>
+</ul>
+<p>手工创建迭代器类，可继承Iterator对象，然后再写__next__方法。但显示生成不需要去写</p>
+<pre><code>from collections.abc import Iterator
+# 或者是以下（推荐）
+from typing import Iterator
+</code></pre>
+<h1 id="生成器">生成器</h1>
+<ul>
+<li>生成器是特殊的迭代器（既实现了迭代协议、迭代器协议和生成器协议）</li>
+<li>生成器内部存储的是数据存储的规则，不会保存具体的数据</li>
+</ul>
+<h3 id="为什么要有生成器">为什么要有生成器？</h3>
+<ul>
+<li>因为迭代器手工实现比较麻烦，所以python提供了生成器对象。生成器的目的就是获得迭代器（快速获得函数__next__和__iter__方法）（非常高效）</li>
+</ul>
+<h3 id="如何创建生成器">如何创建生成器</h3>
+<ul>
+<li>方式一：生成器表达式</li>
+</ul>
+<pre><code>gen_ = (item for item in range(0,100))
+</code></pre>
+<ul>
+<li>方式二：生成器函数
+<ul>
+<li>只要函数中带有yield关键字就不再是一个普通的函数，而是生成器函数，这种生成器函数被调用后返回的是一个生成器对象</li>
+<li>yield是一个关键字，他能记住函数执行的状态，保存状态、恢复状态（有点类似return但又不同）</li>
+</ul>
+</li>
+</ul>
+<pre><code>def gen():
+    print(&quot;test1&quot;)
+    for i in range(10):
+        yield i
+        print(&quot;test2&quot;)
+
+g = gen()
+print(g)
+# 运行结果
+&lt;generator object gen at 0x000001AE90E7D820&gt;
+# 函数中的前后两个print都没有输出
+
+next(g)
+next(g)
+print(next(g))
+# 运行结果
+test1
+test2
+test2
+2
+# 执行顺序：第一个next先print出test1，遇到yield就终止，
+第二个next从print test2开始，然后经过for循环，遇到yield又终止了
+第三个next从print test2开始，然后经过for循环，遇到yield又终止了，返回yield的数据i此时根据for循环i已经等于2
+</code></pre>
+<h2 id="生成器send方法">生成器send方法</h2>
+<ul>
+<li>作用
+<ul>
+<li>能和生成器内部进行数据交互（有next方法的作用，又多个传数据的功能），可以通过传递数据控制生成指定规则的数值</li>
+</ul>
+</li>
+<li>调用send方法之前，要执行一次next
+<ul>
+<li>执行next可以使得函数停止在yield中，等调用send后，就在yeild中开始传递值</li>
+</ul>
+</li>
+</ul>
+<pre><code>def gen():
+    for i in range(10):
+        s = yield i
+        print(f&quot;what I've receive is {s}&quot;)
+
+
+g = gen()
+print(next(g))
+print(g.send(200))
+print(g.send(300))
+print(g.send(400))
+
+# 运行结果
+0
+what I've receive is 200
+1
+what I've receive is 300
+2
+what I've receive is 400
+3
+
+# 运行顺序：第一个print next返回循环的第一个值0，
+第二个print send给生成器函数通过yield传递了值200进去，输出200。然后执行循环到第二个值1，函数暂停，返回1，print出1
+
+</code></pre>
+<h2 id="生成器close方法">生成器close方法</h2>
+<p>关闭生成器，会把该生成器内部的资源的清除（包括生成器yield的位置还有一些局部变量）</p>
+<pre><code>g = gen()
+g.close()
+</code></pre>
+<h2 id="生成器throw方法">生成器throw方法</h2>
+<p>往生成器内部发送异常</p>
+<pre><code>g.throw(ValueError,'主动抛出的异常')
+</code></pre>
+<h1 id="总结">总结</h1>
+<h2 id="生成器和迭代器的区别">生成器和迭代器的区别？</h2>
+<ul>
+<li>生成器是特殊的迭代器，两者都属于可迭代对象</li>
+<li>生成器相比迭代器多了三种方法：send(), close(),  throw()</li>
+<li>包含关系：（可迭代对象（迭代器（生成器）））</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8">迭代器</a>
+<ul>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%8D%8F%E8%AE%AE">迭代协议</a></li>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%8D%8F%E8%AE%AE">迭代器协议</a><br>
+*
+<ul>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%98%AF%E7%89%B9%E6%AE%8A%E7%9A%84%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1">迭代器是特殊的可迭代对象</a></li>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%B8%8E%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%8C%BA%E5%88%AB">迭代器与可迭代对象的区别</a></li>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E5%AE%9E%E7%8E%B0%E6%80%9D%E6%83%B3%E5%8F%AF%E8%BF%AD%E4%BB%A3%E5%AF%B9%E8%B1%A1">迭代器实现思想（可迭代对象）</a></li>
+<li><a href="#%E8%BF%AD%E4%BB%A3%E5%99%A8%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%BF%AD%E4%BB%A3%E5%99%A8%E6%9C%89%E4%BB%80%E4%B9%88%E5%A5%BD%E5%A4%84">迭代器使用场景及使用迭代器有什么好处？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E7%94%9F%E6%88%90%E5%99%A8">生成器</a><br>
+*
+<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%9C%89%E7%94%9F%E6%88%90%E5%99%A8">为什么要有生成器？</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E5%88%9B%E5%BB%BA%E7%94%9F%E6%88%90%E5%99%A8">如何创建生成器</a></li>
+<li><a href="#%E7%94%9F%E6%88%90%E5%99%A8send%E6%96%B9%E6%B3%95">生成器send方法</a></li>
+<li><a href="#%E7%94%9F%E6%88%90%E5%99%A8close%E6%96%B9%E6%B3%95">生成器close方法</a></li>
+<li><a href="#%E7%94%9F%E6%88%90%E5%99%A8throw%E6%96%B9%E6%B3%95">生成器throw方法</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a>
+<ul>
+<li><a href="#%E7%94%9F%E6%88%90%E5%99%A8%E5%92%8C%E8%BF%AD%E4%BB%A3%E5%99%A8%E7%9A%84%E5%8C%BA%E5%88%AB">生成器和迭代器的区别？</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/">
+              <h3 class="post-title">
+                Python数据类型拓展随记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

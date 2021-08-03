@@ -1,0 +1,249 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python数据类型拓展随记 | Notes of Chloe</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1627976096224">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Python数据类型拓展随记 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="1、命名元组
+
+取元祖内部的元素都是同下标索引来进行取值的，比如一个元祖中包含了三个元素tu=('小明‘，18，’男‘)分别代表：姓名、年龄、性别
+通过下标取值不够人性化。
+
+方法一：可以做到类似像 字典一样取值
+tu=('小明‘，18，’..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1627976096224" alt="">
+  </a>
+  <h1 class="site-title">
+    Notes of Chloe
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Python数据类型拓展随记
+            </h2>
+            <div class="post-info">
+              <span>
+                08-03
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="1-命名元组">1、命名元组</h1>
+<ul>
+<li>取元祖内部的元素都是同下标索引来进行取值的，比如一个元祖中包含了三个元素tu=('小明‘，18，’男‘)分别代表：姓名、年龄、性别<br>
+通过下标取值不够人性化。</li>
+</ul>
+<h5 id="方法一可以做到类似像-字典一样取值">方法一：可以做到类似像 字典一样取值</h5>
+<pre><code>tu=('小明‘，18，’男‘)
+NAME=0
+tu[NAME] # 获取姓名
+</code></pre>
+<h5 id="方法二我们可以用命名元组">方法二：我们可以用命名元组</h5>
+<ul>
+<li>collections模块中的namedtuple函数</li>
+</ul>
+<pre><code># namedtuple : 接收两个参数，第一个创建的类型名称，第二个是列表
+from collections import namedtuple
+Student = namedtuple('Student',['name','age','gender'])
+s = Student('小明',18,'男')
+print(s.name)
+&gt;&gt;&gt; 小明
+</code></pre>
+<h1 id="2-推导式">2、推导式</h1>
+<h2 id="列表推导式">列表推导式</h2>
+<ul>
+<li>需求：如何快速生成一个[&quot;data0&quot;,&quot;data1&quot;……,&quot;data99&quot;]的列表</li>
+<li>[ 迭代中的每个元素（可二次加工）      for语句       条件判断（可有可无]</li>
+<li>先写for循环语句，语句前面是结果，语句后面可以修饰迭代值（判断）</li>
+<li></li>
+</ul>
+<pre><code>print([f&quot;data{i}&quot; for i in range(0,101) if i%2 == 0])
+
+# 相当于
+s = []
+for i in range(0,101):
+    if i % 2 == 0:
+        s.append(&quot;data&quot; + str(i))
+print(s)        
+</code></pre>
+<h2 id="字典推导式">字典推导式</h2>
+<ul>
+<li>在上面我们通过列表推导式可以快速生成列表，同样也可以快速生成</li>
+</ul>
+<pre><code># cookie中获取的字符串进行分割，形成对应字典
+cookie_str = 'BSJIJ=fjiijijij;fjiewjfiw=nn922;jijiwf=0933;jiejfwo=wefewfv'
+
+print({item.split('=')[0]:item.split('=')[1] for item in cookie_str.split(';')})
+</code></pre>
+<ul>
+<li>推导式的注意事项：使用推导式是为了让代码简洁，但不代表代码越少就越好，推导式过于复杂会影响代码的可读性</li>
+</ul>
+<h2 id="生成器表达式">生成器表达式</h2>
+<ul>
+<li>以上在中括号使用推导式是列表推导式，大括号中使用推导式是字典推导式</li>
+<li>那么小括号使用的推导式是什么？</li>
+</ul>
+<pre><code>gen_ = (item for item in range(0,100))
+print(gen_)
+# 打印的是一个生成器
+&gt;&gt;&gt;  &lt;generator object &lt;genexpr&gt; at 0x0000019C0EA7D820&gt;
+</code></pre>
+<ul>
+<li>在小括号中使用推导式它有一个特殊的名字是生成器表达式</li>
+<li>generator object，就是一个生成器对象</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#1-%E5%91%BD%E5%90%8D%E5%85%83%E7%BB%84">1、命名元组</a><br>
+*<br>
+*<br>
+*<br>
+* <a href="#%E6%96%B9%E6%B3%95%E4%B8%80%E5%8F%AF%E4%BB%A5%E5%81%9A%E5%88%B0%E7%B1%BB%E4%BC%BC%E5%83%8F-%E5%AD%97%E5%85%B8%E4%B8%80%E6%A0%B7%E5%8F%96%E5%80%BC">方法一：可以做到类似像 字典一样取值</a><br>
+* <a href="#%E6%96%B9%E6%B3%95%E4%BA%8C%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E7%94%A8%E5%91%BD%E5%90%8D%E5%85%83%E7%BB%84">方法二：我们可以用命名元组</a></li>
+<li><a href="#2-%E6%8E%A8%E5%AF%BC%E5%BC%8F">2、推导式</a>
+<ul>
+<li><a href="#%E5%88%97%E8%A1%A8%E6%8E%A8%E5%AF%BC%E5%BC%8F">列表推导式</a></li>
+<li><a href="#%E5%AD%97%E5%85%B8%E6%8E%A8%E5%AF%BC%E5%BC%8F">字典推导式</a></li>
+<li><a href="#%E7%94%9F%E6%88%90%E5%99%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F">生成器表达式</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/">
+              <h3 class="post-title">
+                🔆Gridea+Github+域名：搭建一个属于自己的博客网站
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

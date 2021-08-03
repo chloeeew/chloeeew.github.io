@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Notes of Chloe</title>
-    <updated>2021-08-03T07:21:32.568Z</updated>
+    <updated>2021-08-03T07:35:00.816Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -10,6 +10,288 @@
     <logo>https://chloeeew.github.io/images/avatar.png</logo>
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Notes of Chloe</rights>
+    <entry>
+        <title type="html"><![CDATA[Python 迭代器和生成器随记]]></title>
+        <id>https://chloeeew.github.io/post/python-die-dai-qi-he-sheng-cheng-qi-sui-ji/</id>
+        <link href="https://chloeeew.github.io/post/python-die-dai-qi-he-sheng-cheng-qi-sui-ji/">
+        </link>
+        <updated>2021-08-03T07:34:44.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="迭代器">迭代器</h1>
+<h2 id="迭代协议">迭代协议</h2>
+<ul>
+<li>迭代协议：对象定义了一个__iter__方法的</li>
+<li>可迭代对象iterable：能够使用for循环进行遍历的，该对象能够进行for循环或map函数等等
+<ul>
+<li>其内部实现了一个迭代协议：实现方式：对象内部定义了一个__iter__()方法（只要有这个方法就实现了迭代协议<br>
+常见的可迭代对象有list、str、tuple</li>
+</ul>
+</li>
+</ul>
+<pre><code># 判断是否为可迭代对象：
+dir(list) # 查看是否有__iter__
+hasattr(list,'__iter__')
+</code></pre>
+<h2 id="迭代器协议">迭代器协议</h2>
+<h4 id="迭代器是特殊的可迭代对象">迭代器是特殊的可迭代对象</h4>
+<ul>
+<li>迭代器对象还实现了__next__方法（迭代器除了有__iter__属性还有 __next__是属性）</li>
+<li>迭代器可以被for迭代，for迭代迭代器时，会执行__next__方法</li>
+<li>核心：通过__next__方法记住迭代的位置，有没有迭代完毕</li>
+<li>__next__方法需要在值取完的时候，抛出StopIteration的错误信息<br>
+所有的可迭代对象都可以转化为迭代器</li>
+</ul>
+<pre><code>迭代器 = iter(可迭代对象)
+
+# 例子
+li = [1,2,3,4,5]
+li_iterator = iter(li)
+print(li_iterator)
+
+# 运行结果
+&lt;list_iterator object at 0x000001F4A9F292B0&gt;
+</code></pre>
+<h4 id="迭代器与可迭代对象的区别">迭代器与可迭代对象的区别</h4>
+<ul>
+<li>区别是迭代器可以使用内置的next函数</li>
+</ul>
+<pre><code>print(next(li_iterator))
+print(next(li_iterator))
+print(next(li_iterator))
+print(next(li_iterator))
+print(next(li_iterator))
+
+# 运行结果
+1
+2
+3
+4
+5
+</code></pre>
+<p>注意点：当使用next获取完迭代器中所有的元素后，再次使用next进行迭代会抛出迭代器停止的异常</p>
+<h4 id="迭代器实现思想可迭代对象">迭代器实现思想（可迭代对象）</h4>
+<pre><code>class Next:
+    def __init__(self,stop,start=-1):
+        self.start = start
+        self.stop = stop
+
+    def __next__(self):
+        if self.start &gt;= self.stop-1:
+            raise StopIteration
+        self.start += 1
+        return self.start
+
+class MyRange:
+    def __init__(self,stop):
+        self.stop = stop
+
+    def __iter__(self):
+        return Next(self.stop)
+
+
+if __name__ == &quot;__main__&quot;:
+    print([i for i in MyRange(10)])
+    
+# 运行结果
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+</code></pre>
+<p>注意：从以上可以看出来，__iter__方法要求返回值必须有__next__方法</p>
+<ul>
+<li>而传统的range实现原理如下：</li>
+</ul>
+<pre><code>def range_test(stop):
+    start = 0
+    result = []
+    while start &lt; stop:
+        result.append(start)
+        start += 1
+    return result    
+</code></pre>
+<h3 id="迭代器使用场景及使用迭代器有什么好处">迭代器使用场景及使用迭代器有什么好处？</h3>
+<p>在大批量存储数据的时候，迭代器可以帮助我们节约内存，需要的时候才会生成这个数<br>
+例如，一个列表中有1w个数据，那它要把这1w数据都存下来，[1,2,3,....10000],它占用的内存空间比较大。</p>
+<ul>
+<li><strong>总结：迭代器的特点有延迟生成数据，节省内存</strong></li>
+</ul>
+<p>手工创建迭代器类，可继承Iterator对象，然后再写__next__方法。但显示生成不需要去写</p>
+<pre><code>from collections.abc import Iterator
+# 或者是以下（推荐）
+from typing import Iterator
+</code></pre>
+<h1 id="生成器">生成器</h1>
+<ul>
+<li>生成器是特殊的迭代器（既实现了迭代协议、迭代器协议和生成器协议）</li>
+<li>生成器内部存储的是数据存储的规则，不会保存具体的数据</li>
+</ul>
+<h3 id="为什么要有生成器">为什么要有生成器？</h3>
+<ul>
+<li>因为迭代器手工实现比较麻烦，所以python提供了生成器对象。生成器的目的就是获得迭代器（快速获得函数__next__和__iter__方法）（非常高效）</li>
+</ul>
+<h3 id="如何创建生成器">如何创建生成器</h3>
+<ul>
+<li>方式一：生成器表达式</li>
+</ul>
+<pre><code>gen_ = (item for item in range(0,100))
+</code></pre>
+<ul>
+<li>方式二：生成器函数
+<ul>
+<li>只要函数中带有yield关键字就不再是一个普通的函数，而是生成器函数，这种生成器函数被调用后返回的是一个生成器对象</li>
+<li>yield是一个关键字，他能记住函数执行的状态，保存状态、恢复状态（有点类似return但又不同）</li>
+</ul>
+</li>
+</ul>
+<pre><code>def gen():
+    print(&quot;test1&quot;)
+    for i in range(10):
+        yield i
+        print(&quot;test2&quot;)
+
+g = gen()
+print(g)
+# 运行结果
+&lt;generator object gen at 0x000001AE90E7D820&gt;
+# 函数中的前后两个print都没有输出
+
+next(g)
+next(g)
+print(next(g))
+# 运行结果
+test1
+test2
+test2
+2
+# 执行顺序：第一个next先print出test1，遇到yield就终止，
+第二个next从print test2开始，然后经过for循环，遇到yield又终止了
+第三个next从print test2开始，然后经过for循环，遇到yield又终止了，返回yield的数据i此时根据for循环i已经等于2
+</code></pre>
+<h2 id="生成器send方法">生成器send方法</h2>
+<ul>
+<li>作用
+<ul>
+<li>能和生成器内部进行数据交互（有next方法的作用，又多个传数据的功能），可以通过传递数据控制生成指定规则的数值</li>
+</ul>
+</li>
+<li>调用send方法之前，要执行一次next
+<ul>
+<li>执行next可以使得函数停止在yield中，等调用send后，就在yeild中开始传递值</li>
+</ul>
+</li>
+</ul>
+<pre><code>def gen():
+    for i in range(10):
+        s = yield i
+        print(f&quot;what I've receive is {s}&quot;)
+
+
+g = gen()
+print(next(g))
+print(g.send(200))
+print(g.send(300))
+print(g.send(400))
+
+# 运行结果
+0
+what I've receive is 200
+1
+what I've receive is 300
+2
+what I've receive is 400
+3
+
+# 运行顺序：第一个print next返回循环的第一个值0，
+第二个print send给生成器函数通过yield传递了值200进去，输出200。然后执行循环到第二个值1，函数暂停，返回1，print出1
+
+</code></pre>
+<h2 id="生成器close方法">生成器close方法</h2>
+<p>关闭生成器，会把该生成器内部的资源的清除（包括生成器yield的位置还有一些局部变量）</p>
+<pre><code>g = gen()
+g.close()
+</code></pre>
+<h2 id="生成器throw方法">生成器throw方法</h2>
+<p>往生成器内部发送异常</p>
+<pre><code>g.throw(ValueError,'主动抛出的异常')
+</code></pre>
+<h1 id="总结">总结</h1>
+<h2 id="生成器和迭代器的区别">生成器和迭代器的区别？</h2>
+<ul>
+<li>生成器是特殊的迭代器，两者都属于可迭代对象</li>
+<li>生成器相比迭代器多了三种方法：send(), close(),  throw()</li>
+<li>包含关系：（可迭代对象（迭代器（生成器）））</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Python数据类型拓展随记]]></title>
+        <id>https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/</id>
+        <link href="https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/">
+        </link>
+        <updated>2021-08-03T07:34:08.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-命名元组">1、命名元组</h1>
+<ul>
+<li>取元祖内部的元素都是同下标索引来进行取值的，比如一个元祖中包含了三个元素tu=('小明‘，18，’男‘)分别代表：姓名、年龄、性别<br>
+通过下标取值不够人性化。</li>
+</ul>
+<h5 id="方法一可以做到类似像-字典一样取值">方法一：可以做到类似像 字典一样取值</h5>
+<pre><code>tu=('小明‘，18，’男‘)
+NAME=0
+tu[NAME] # 获取姓名
+</code></pre>
+<h5 id="方法二我们可以用命名元组">方法二：我们可以用命名元组</h5>
+<ul>
+<li>collections模块中的namedtuple函数</li>
+</ul>
+<pre><code># namedtuple : 接收两个参数，第一个创建的类型名称，第二个是列表
+from collections import namedtuple
+Student = namedtuple('Student',['name','age','gender'])
+s = Student('小明',18,'男')
+print(s.name)
+&gt;&gt;&gt; 小明
+</code></pre>
+<h1 id="2-推导式">2、推导式</h1>
+<h2 id="列表推导式">列表推导式</h2>
+<ul>
+<li>需求：如何快速生成一个[&quot;data0&quot;,&quot;data1&quot;……,&quot;data99&quot;]的列表</li>
+<li>[ 迭代中的每个元素（可二次加工）      for语句       条件判断（可有可无]</li>
+<li>先写for循环语句，语句前面是结果，语句后面可以修饰迭代值（判断）</li>
+<li></li>
+</ul>
+<pre><code>print([f&quot;data{i}&quot; for i in range(0,101) if i%2 == 0])
+
+# 相当于
+s = []
+for i in range(0,101):
+    if i % 2 == 0:
+        s.append(&quot;data&quot; + str(i))
+print(s)        
+</code></pre>
+<h2 id="字典推导式">字典推导式</h2>
+<ul>
+<li>在上面我们通过列表推导式可以快速生成列表，同样也可以快速生成</li>
+</ul>
+<pre><code># cookie中获取的字符串进行分割，形成对应字典
+cookie_str = 'BSJIJ=fjiijijij;fjiewjfiw=nn922;jijiwf=0933;jiejfwo=wefewfv'
+
+print({item.split('=')[0]:item.split('=')[1] for item in cookie_str.split(';')})
+</code></pre>
+<ul>
+<li>推导式的注意事项：使用推导式是为了让代码简洁，但不代表代码越少就越好，推导式过于复杂会影响代码的可读性</li>
+</ul>
+<h2 id="生成器表达式">生成器表达式</h2>
+<ul>
+<li>以上在中括号使用推导式是列表推导式，大括号中使用推导式是字典推导式</li>
+<li>那么小括号使用的推导式是什么？</li>
+</ul>
+<pre><code>gen_ = (item for item in range(0,100))
+print(gen_)
+# 打印的是一个生成器
+&gt;&gt;&gt;  &lt;generator object &lt;genexpr&gt; at 0x0000019C0EA7D820&gt;
+</code></pre>
+<ul>
+<li>在小括号中使用推导式它有一个特殊的名字是生成器表达式</li>
+<li>generator object，就是一个生成器对象</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[🔆Gridea+Github+域名：搭建一个属于自己的博客网站]]></title>
         <id>https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/</id>
