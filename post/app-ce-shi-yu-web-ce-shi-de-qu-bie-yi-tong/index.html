@@ -2,24 +2,21 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Hello Gridea | Notes of Chloe</title>
+<title>APP测试与WEB测试的区别(异同) | Notes of Chloe</title>
 <link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1627964046388">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="Hello Gridea | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="APP测试与WEB测试的区别(异同) | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="👏  欢迎使用 Gridea ！
-✍️  Gridea 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...
+    <meta name="description" content="相同点：
 
-Github
-Gridea 主页
-示例网站
-特性👇
-📝  你可以使用最酷的 Markdo..." />
-    <meta name="keywords" content="Gridea" />
+功能测试层面而言：APP测试和web测试都是使用相同的测试用例测试方法（都用到等价类划分、边界值分析、正常和异常情况去考虑测试点）
+UI界面测试：都需要按照原型图和设计图检查UI，包括布局、风格和按钮等是否简洁美观、是否统一
+性..." />
+    <meta name="keywords" content="功能测试" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -81,54 +78,55 @@ Gridea 主页
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              Hello Gridea
+              APP测试与WEB测试的区别(异同)
             </h2>
             <div class="post-info">
               <span>
-                12-12
+                08-05
               </span>
               <span>
-                2 min read
+                3 min read
               </span>
               
-                <a href="https://chloeeew.github.io/tag/71xodOAkj/" class="post-tag">
-                  # Gridea
+                <a href="https://chloeeew.github.io/tag/39yDGrYp15/" class="post-tag">
+                  # 功能测试
                 </a>
               
             </div>
             
-              <img class="post-feature-image" src="https://chloeeew.github.io/post-images/hello-gridea.png" alt="">
-            
             <div class="post-content-wrapper">
               <div class="post-content">
-                <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+                <h2 id="相同点">相同点：</h2>
+<ul>
+<li>功能测试层面而言：APP测试和web测试都是使用相同的测试用例测试方法（都用到等价类划分、边界值分析、正常和异常情况去考虑测试点）</li>
+<li>UI界面测试：都需要按照原型图和设计图检查UI，包括布局、风格和按钮等是否简洁美观、是否统一</li>
+<li>性能测试（服务器后台的性能测试）：加载翻页的速度、登录时长、内存是否溢出等，测试系统的稳定性</li>
+<li>安全测试：后台接口安全测试方式基本一致</li>
+</ul>
+<h2 id="不同点">不同点：</h2>
+<p>1.系统结构而言：web项目是基于B/S架构的，而app项目是C/S架构的</p>
+<p>2.APP基本的功能点测试外，还有属于app的特性测试<br>
+A）全新安装/卸载测试，升级测试、第三方软件安装测试等<br>
+B）对指纹、手势等独有的登录方式进行测试、单点多点登录<br>
+C）触控操作测试，两指三指长按短按、以及横竖屏等的测试<br>
+D）消息推送测试，测试在不同的手机推送方式下，用户能否正常接收正常查看推送</p>
+<p>3.兼容性测试：web项目考虑不同浏览器的兼容，app需要考虑不同操作系统、机型、屏幕、分辨率的兼容</p>
+<p>4.中断测试：来电接收信息低电量等操作会对app应用程序产生影响，所以要考虑人为中断、新任务中断以及意外中断等情况对app进行测试，包括前后台切换、横竖屏切换、待机等测试</p>
+<p>5.网络测试：4G与WIFI之间切换网络测试、无网测试、弱网（延迟丢包）测试、离线测试</p>
+<p>6.权限测试：手机权限测试包括扣费风险、隐私泄露、相册访问、录音定位允许</p>
+<p>7.安全测试：app中安装包是否可反编译代码、防二次打包、防内存篡改等</p>
+<p>8.性能测试：需要进行app客户端性能测试，包括app安装卸载响应时间、cpu内存电量的占用，需要使用专门的性能测试工具GT、instrument等工具。</p>
+<p>9.测试工具方面：app自动化工具使用Appium，Web一般使用Selenium</p>
+<hr>
+<p>本人CSDN中有相同内容博客：https://blog.csdn.net/weizhi3320/article/details/106016807</p>
 
               </div>
               <div class="toc-container">
                 <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E7%89%B9%E6%80%A7">特性👇</a></li>
+<li><a href="#%E7%9B%B8%E5%90%8C%E7%82%B9">相同点：</a></li>
+<li><a href="#%E4%B8%8D%E5%90%8C%E7%82%B9">不同点：</a></li>
 </ul>
 </li>
 </ul>
@@ -138,6 +136,15 @@ Gridea 主页
           </article>
         </div>
 
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/">
+              <h3 class="post-title">
+                Python元类-认识和应用
+              </h3>
+            </a>
+          </div>
         
 
         

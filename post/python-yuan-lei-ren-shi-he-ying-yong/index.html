@@ -1,0 +1,431 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python元类-认识和应用 | Notes of Chloe</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1627964046388">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Python元类-认识和应用 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="元类metaclass
+类的类型是什么？
+元类，int、list等都是由元类创建的,type是Python的内建元类，任何类都有所属的元类（type）
+print(type(1))
+print(type(int))
+---运行结果---
+&..." />
+    <meta name="keywords" content="python" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1627964046388" alt="">
+  </a>
+  <h1 class="site-title">
+    Notes of Chloe
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Python元类-认识和应用
+            </h2>
+            <div class="post-info">
+              <span>
+                04-06
+              </span>
+              <span>
+                7 min read
+              </span>
+              
+                <a href="https://chloeeew.github.io/tag/QBV9m7vgM/" class="post-tag">
+                  # python
+                </a>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="元类metaclass">元类metaclass</h1>
+<h4 id="类的类型是什么">类的类型是什么？</h4>
+<p>元类，int、list等都是由元类创建的,type是Python的内建元类，任何类都有所属的元类（type）</p>
+<pre><code>print(type(1))
+print(type(int))
+---运行结果---
+&lt;class 'int'&gt;
+&lt;class 'type'&gt;
+</code></pre>
+<h4 id="元类能干什么">元类能干什么？</h4>
+<ul>
+<li>元类的核心思想，就是捣鼓类这个对象、使你能对其有着最高程度的控制权</li>
+</ul>
+<h4 id="元类和类的关系">元类和类的关系</h4>
+<p>元类metaclass可以创建元类，元类创建类（包括object也是由type创建的），类创建对象</p>
+<h2 id="如何使用元类创建类">如何使用元类创建类？</h2>
+<ul>
+<li>方法一：通过type函数创建</li>
+</ul>
+<p>type(类名, 父类以元组表示（针对继承的情况，可以为空），包含的属性用字典表示（名称和值）)<br>
+例子</p>
+<pre><code>def __init__(self,name):
+    self.name = name
+ 
+Student = type('Student',(object,),{'__init__':__init__,})
+aa = Student('chloee')
+print(Student)
+print(aa.name)
+------
+&lt;class '__main__.Student'&gt;
+chloee
+</code></pre>
+<ul>
+<li>方法二：继承type元类</li>
+</ul>
+<pre><code>class MyMetaclass(type):
+    def __new__(cls,name,bases,attrs):
+        &quot;&quot;&quot;
+        创建对象（这个对象是一个类）
+        name：字符串，类的名称
+        bases：元组(基础类1，基础类2……)
+        attrs：字典（__dict__属性）
+        &quot;&quot;&quot;
+        name = 'Person'
+        attrs['name'] = 'chloe'
+        attrs['age'] = 18
+        bases = (object,)
+        return type.__new__(cls,name,bases,attrs)
+ 
+class MyClass(object, metaclass=MyMetaclass):
+    pass
+ 
+ 
+if __name__ == '__main__':
+    print(MyClass.name)
+    
+    
+---运行结果--
+chloe
+</code></pre>
+<p>这两个创建的例子，好像都不是很能突出元类到底有什么用，感觉这...直接继承不就更好了吗？</p>
+<h3 id="应用例子例子是在另一个博主那找的稍微改动了一下">应用例子（例子是在另一个博主那找的，稍微改动了一下）</h3>
+<ul>
+<li>定义一个“人”（Person）类，它有三个方法：吃饭、睡觉、打游戏</li>
+<li>定义 Person 的三个子类“小张”（Zhang）、“小王”（Wang）、“小江”（Jiang）<br>
+定义“人”的子类“小周”（Zhou），使用元类， 要求他：<br>
+吃饭像小王一样快，能力<em>2<br>
+睡觉像小张一样香，能力</em>3<br>
+打游戏像小江一样熟练，能力*4</li>
+</ul>
+<pre><code>&quot;&quot;&quot;
+作为人类自然有吃喝玩的能力
+而三人只是在吃喝睡中有较强能力
+&quot;&quot;&quot;
+class Person:
+    def __init__(self):
+        self.ability = 1
+ 
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability)
+ 
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability)
+ 
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability)
+ 
+ 
+class Wang(Person):
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 2)
+ 
+ 
+class Zhang(Person):
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 3)
+ 
+ 
+class Jiang(Person):
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 4)
+ 小周使用元类获得最高的权限，他创建了元类，获得第一个继承的父类的吃方法，获得第二个继承的父类的睡觉方法，获得第三个继承父类的打游戏方法
+
+class MyMetaclass(type):
+    def __new__(cls, *args, **kwargs):
+        print(args)
+        name, bases, attrs = args[:3]
+        person1, person2, person3 = bases
+ 
+        def eat(self):
+            person1.eat(self)
+ 
+        def sleep(self):
+            person2.sleep(self)
+ 
+        def play_game(self):
+            person3.play_game(self)
+ 
+        attrs['eat'] = eat
+        attrs['sleep'] = sleep
+        attrs['play_game'] = play_game
+ 
+        return type(name,bases,attrs)
+ 
+ 
+ 
+ 
+class Zhou(Zhang,Jiang,Wang,metaclass=MyMetaclass):
+    pass
+注意这里小周他第一个继承的父类是小张，而小张的吃饭技能只是普通人类的水平
+
+这里我们可以再定义一个人，”小红“（Hong）她也想像（Zhou）想的那样能吃能睡能打好游戏，但她就只继承就行了，继承顺序与Zhou一样
+
+class Hong(Zhang,Jiang,Wang):
+    pass
+输出一下小红和小周继承结果
+
+if __name__ == '__main__':
+    h = Hong()
+    z = Zhou()
+    print('-------')
+    h.eat()
+    z.eat()
+    print('-------')
+    h.sleep()
+    z.sleep()
+    print('-------')
+    h.play_game()
+    z.play_game()
+ 
+ 
+---运行结果----
+-------
+Eat:  2
+Eat:  1
+-------
+Sleep:  3
+Sleep:  1
+-------
+play game:  4
+play game:  1
+</code></pre>
+<p>小红达到了她的目标（菱形继承），而小周因为改了继承顺序没对应上想要的人的能力</p>
+<ul>
+<li>如果是继承的话，无论是eat、sleep还是play game都会寻找继承类中的eat、sleep和play game方法，即会找到wang的吃饭方法，zhang的睡觉方法，以及jiang的play game方法，那么都是获得最强的能力</li>
+<li>但如果是创建元类的话，就能获得最大的控制权，按照继承的顺序获得对应人的能力，如果继承第一位是Wang，那么按照创建元类对象的方法来看，就调用Wang的吃方法，即能力<em>2。如果继承第一位是Jiang，那么就调用Jiang的吃方法，即能力只是</em>1。这样能很好的控制，继承哪个类的哪个方法</li>
+<li>我们接着再试一下，把三位强人的吃喝玩游戏能力都改为不同于普通人的能力，小红还能获得小王的吃能力、小张的睡能力和小江的玩游戏能力吗？</li>
+</ul>
+<pre><code>class Wang(Person):
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 2)
+ 
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 0.8)
+ 
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 0.7)
+ 
+ 
+class Zhang(Person):
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 3)
+ 
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 0.6)
+ 
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 0.99)
+ 
+ 
+class Jiang(Person):
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 4)
+ 
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 0.88)
+ 
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 0.77)
+ 
+ 
+class Hong(Wang,Zhang,Jiang):
+    pass
+ 
+class Zhou(Wang,Zhang,Jiang,metaclass=MyMetaclass):
+    pass
+ 
+ 
+if __name__ == '__main__':
+    h = Hong()
+    z = Zhou()
+    print('-------')
+    h.eat()
+    z.eat()
+    print('-------')
+    h.sleep()
+    z.sleep()
+    print('-------')
+    h.play_game()
+    z.play_game()
+Person类和MyMetaclass类没有变更
+
+那么输出的结果是，在继承顺序按照小王、小张、小江的情况下，小周能够如愿获得三人的能力
+
+-------
+Eat:  2
+Eat:  2
+-------
+Sleep:  0.8
+Sleep:  3
+-------
+play game:  0.7
+play game:  4
+</code></pre>
+<p>但其实貌似也只是理解一下有元类这么一个概念，好像也不太需要用上它哈哈哈。</p>
+<pre><code> ”元类就是深度的魔法，99%的用户应该根本不必为此操心。如果你想搞清楚究竟是否需要用到元类，那么你就不需要它。那些实际用到元类的人都非常清楚地知道他们需要做什么，而且根本不需要解释为什么要用元类“  
+</code></pre>
+<ul>
+<li>CSDN博客亦有相同内容：</li>
+<li>https://blog.csdn.net/weizhi3320/article/details/118575612</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%85%83%E7%B1%BBmetaclass">元类metaclass</a><br>
+*<br>
+*<br>
+* <a href="#%E7%B1%BB%E7%9A%84%E7%B1%BB%E5%9E%8B%E6%98%AF%E4%BB%80%E4%B9%88">类的类型是什么？</a><br>
+* <a href="#%E5%85%83%E7%B1%BB%E8%83%BD%E5%B9%B2%E4%BB%80%E4%B9%88">元类能干什么？</a><br>
+* <a href="#%E5%85%83%E7%B1%BB%E5%92%8C%E7%B1%BB%E7%9A%84%E5%85%B3%E7%B3%BB">元类和类的关系</a>
+<ul>
+<li><a href="#%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8%E5%85%83%E7%B1%BB%E5%88%9B%E5%BB%BA%E7%B1%BB">如何使用元类创建类？</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E4%BE%8B%E5%AD%90%E4%BE%8B%E5%AD%90%E6%98%AF%E5%9C%A8%E5%8F%A6%E4%B8%80%E4%B8%AA%E5%8D%9A%E4%B8%BB%E9%82%A3%E6%89%BE%E7%9A%84%E7%A8%8D%E5%BE%AE%E6%94%B9%E5%8A%A8%E4%BA%86%E4%B8%80%E4%B8%8B">应用例子（例子是在另一个博主那找的，稍微改动了一下）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/linux-fang-huo-qiang-iptable-ming-ling-xiang-jie/">
+              <h3 class="post-title">
+                Linux 防火墙 iptable命令详解
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

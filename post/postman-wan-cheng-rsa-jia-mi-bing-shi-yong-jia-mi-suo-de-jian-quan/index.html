@@ -1,0 +1,253 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Postman完成RSA加密并使用加密所得鉴权 | Notes of Chloe</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1627964046388">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Postman完成RSA加密并使用加密所得鉴权 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+
+接口的鉴权方式除了token以外，还会遇到使用RSA加密和签名来处理的请求参数。在使用python完成接口自动化时，可以很方便的利用第三方库rsa，利用需要加密的字节信息和公钥对象用rsa.encrypt生成加密文本，从而得到我们所需要..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1627964046388" alt="">
+  </a>
+  <h1 class="site-title">
+    Notes of Chloe
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Postman完成RSA加密并使用加密所得鉴权
+            </h2>
+            <div class="post-info">
+              <span>
+                05-06
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <ul>
+<li>
+<p>接口的鉴权方式除了token以外，还会遇到使用RSA加密和签名来处理的请求参数。在使用python完成接口自动化时，可以很方便的利用第三方库rsa，利用需要加密的字节信息和公钥对象用rsa.encrypt生成加密文本，从而得到我们所需要的加密后的信息。</p>
+</li>
+<li>
+<p>postman相比python就稍微比较复杂了，因为postman作为接口测试工具，多数功能测试者在用，但postman本身不支持rsa加密，在pre-request-script中需要写一定的代码，且需要forgeJS协助。如果不懂代码，那建议寻求开发协助，或者一步步按照以下方式操作即可。</p>
+</li>
+</ul>
+<hr>
+<h3 id="解决方案">解决方案：</h3>
+<ul>
+<li>
+<pre><code>在pre-requests-script中，添加forge模块代码到全局变量中，提取的全局变量（字符串类型）通过eval函数使其在当前环境中执行，利用模块中提供的生成公钥对象和加密方法加密。
+</code></pre>
+</li>
+</ul>
+<h3 id="本次加密得到的产出物设置到全局变量中">本次加密得到的产出物，设置到全局变量中：</h3>
+<ol>
+<li>token前50位+时间戳 ，加密后得到的sign</li>
+<li>时间戳timestamp</li>
+</ol>
+<hr>
+<h3 id="1-下载forge使用gitbash">1、下载forge（使用gitbash）</h3>
+<pre><code>git clone https://github.com/digitalbazaar/forge.git
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://chloeeew.github.io/post-images/1627963730176.png" alt="" loading="lazy"></figure>
+<h3 id="2-安装forge使用nmp">2、安装forge（使用nmp）</h3>
+<pre><code>cd 到你gitbash下载的位置
+npm install
+</code></pre>
+<p>注意事项：这步我没有报错，如果有报错信息请看一下是否有下载node</p>
+<h3 id="3-在需要鉴权的接口请求的pre-request-script中设置">3、在需要鉴权的接口请求的pre-request-script中设置</h3>
+<p>前提：token在登录接口中已经设置到全局变量中了<br>
+注意事项：这里的公钥是需要项目开发提供（本文的公钥已做了脱敏处理）</p>
+<pre><code>if(!pm.globals.has(&quot;forgeJS&quot;)){
+    pm.sendRequest(&quot;https://raw.githubusercontent.com/loveiset/RSAForPostman/master/forge.js&quot;, function (err, res) {
+        if (err) {
+            console.log(&quot;hellworld&quot;)
+            console.log(err);
+            
+        } else {
+            pm.globals.set(&quot;forgeJS&quot;, res.text());
+        }
+    })
+}
+eval(postman.getGlobalVariable(&quot;forgeJS&quot;));
+pm.globals.unset(&quot;variable_key&quot;);
+pm.globals.set(&quot;variable_key&quot;, &quot;variable_value&quot;);
+ 
+ 
+// 这里的公钥需要项目开发者提供（pem文件公钥）
+const public_key = '-----BEGIN PUBLIC KEY-----\n' +
+        'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQ5ENTu9Z1LprzedE\n' +
+        'O3F7gs+7bzrgPsMl29LX8UoPYvIG8C604CprBQ4FkfnJp0WZyLq6sBr\n' +
+        'tuPorOc42+gLnFfyhJAwdZB6SqWfDg7bW+jNe5K555555lEMGo8Dg+S\n' +
+        'kKlZFc8Br7SHtbL2tQIDAQAB\n' +
+        '-----END PUBLIC KEY-----'
+ 
+var publicKey = forge.pki.publicKeyFromPem(public_key);//公钥
+var timestamp = Math.round(new Date().getTime()/1000);//时间戳
+var token = pm.environment.get(&quot;token&quot;)
+var tempStr = token.substring(0,50)+timestamp //拼接的token+时间戳
+ 
+//rsa加密得到签名
+var sign = forge.util.encode64(publicKey.encrypt(tempStr,'RSAES-PKCS1-V1_5',{md:forge.md.sha1.create(),mgf: forge.mgf.mgf1.create(forge.md.sha1.create())}));
+ 
+//将得到的产物设置到全局变量中
+pm.environment.set(&quot;timestamp&quot;,timestamp)
+pm.environment.set(&quot;sign&quot;,sign)
+</code></pre>
+<hr>
+<p>本人CSDN中有相同文章：https://blog.csdn.net/weizhi3320/article/details/117903607</p>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88">解决方案：</a></li>
+<li><a href="#%E6%9C%AC%E6%AC%A1%E5%8A%A0%E5%AF%86%E5%BE%97%E5%88%B0%E7%9A%84%E4%BA%A7%E5%87%BA%E7%89%A9%E8%AE%BE%E7%BD%AE%E5%88%B0%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E4%B8%AD">本次加密得到的产出物，设置到全局变量中：</a></li>
+<li><a href="#1-%E4%B8%8B%E8%BD%BDforge%E4%BD%BF%E7%94%A8gitbash">1、下载forge（使用gitbash）</a></li>
+<li><a href="#2-%E5%AE%89%E8%A3%85forge%E4%BD%BF%E7%94%A8nmp">2、安装forge（使用nmp）</a></li>
+<li><a href="#3-%E5%9C%A8%E9%9C%80%E8%A6%81%E9%89%B4%E6%9D%83%E7%9A%84%E6%8E%A5%E5%8F%A3%E8%AF%B7%E6%B1%82%E7%9A%84pre-request-script%E4%B8%AD%E8%AE%BE%E7%BD%AE">3、在需要鉴权的接口请求的pre-request-script中设置</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/python-zi-dong-hua-ce-shi-eval-hou-shu-zi-yun-suan-de-dao-wu-xian-xiao-shu/">
+              <h3 class="post-title">
+                python自动化测试-eval后数字运算得到无限小数
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>

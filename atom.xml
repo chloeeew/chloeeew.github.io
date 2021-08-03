@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Notes of Chloe</title>
-    <updated>2021-07-29T03:03:03.839Z</updated>
+    <updated>2021-08-03T04:14:20.396Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -11,35 +11,621 @@
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Notes of Chloe</rights>
     <entry>
-        <title type="html"><![CDATA[Hello Gridea]]></title>
-        <id>https://chloeeew.github.io/post/hello-gridea/</id>
-        <link href="https://chloeeew.github.io/post/hello-gridea/">
+        <title type="html"><![CDATA[Postman完成RSA加密并使用加密所得鉴权]]></title>
+        <id>https://chloeeew.github.io/post/postman-wan-cheng-rsa-jia-mi-bing-shi-yong-jia-mi-suo-de-jian-quan/</id>
+        <link href="https://chloeeew.github.io/post/postman-wan-cheng-rsa-jia-mi-bing-shi-yong-jia-mi-suo-de-jian-quan/">
         </link>
-        <updated>2018-12-11T16:00:00.000Z</updated>
-        <summary type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-]]></summary>
-        <content type="html"><![CDATA[<p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-<!-- more -->
-<p><a href="https://github.com/getgridea/gridea">Github</a><br>
-<a href="https://gridea.dev/">Gridea 主页</a><br>
-<a href="http://fehey.com/">示例网站</a></p>
-<h2 id="特性">特性👇</h2>
-<p>📝  你可以使用最酷的 <strong>Markdown</strong> 语法，进行快速创作</p>
-<p>🌉  你可以给文章配上精美的封面图和在文章任意位置插入图片</p>
-<p>🏷️  你可以对文章进行标签分组</p>
-<p>📋  你可以自定义菜单，甚至可以创建外部链接菜单</p>
-<p>💻  你可以在 <strong>Windows</strong>，<strong>MacOS</strong> 或 <strong>Linux</strong> 设备上使用此客户端</p>
-<p>🌎  你可以使用 <strong>𝖦𝗂𝗍𝗁𝗎𝖻 𝖯𝖺𝗀𝖾𝗌</strong> 或 <strong>Coding Pages</strong> 向世界展示，未来将支持更多平台</p>
-<p>💬  你可以进行简单的配置，接入 <a href="https://github.com/gitalk/gitalk">Gitalk</a> 或 <a href="https://github.com/SukkaW/DisqusJS">DisqusJS</a> 评论系统</p>
-<p>🇬🇧  你可以使用<strong>中文简体</strong>或<strong>英语</strong></p>
-<p>🌁  你可以任意使用应用内默认主题或任意第三方主题，强大的主题自定义能力</p>
-<p>🖥  你可以自定义源文件夹，利用 OneDrive、百度网盘、iCloud、Dropbox 等进行多设备同步</p>
-<p>🌱 当然 <strong>Gridea</strong> 还很年轻，有很多不足，但请相信，它会不停向前 🏃</p>
-<p>未来，它一定会成为你离不开的伙伴</p>
-<p>尽情发挥你的才华吧！</p>
-<p>😘 Enjoy~</p>
+        <updated>2021-05-06T13:03:38.000Z</updated>
+        <content type="html"><![CDATA[<ul>
+<li>
+<p>接口的鉴权方式除了token以外，还会遇到使用RSA加密和签名来处理的请求参数。在使用python完成接口自动化时，可以很方便的利用第三方库rsa，利用需要加密的字节信息和公钥对象用rsa.encrypt生成加密文本，从而得到我们所需要的加密后的信息。</p>
+</li>
+<li>
+<p>postman相比python就稍微比较复杂了，因为postman作为接口测试工具，多数功能测试者在用，但postman本身不支持rsa加密，在pre-request-script中需要写一定的代码，且需要forgeJS协助。如果不懂代码，那建议寻求开发协助，或者一步步按照以下方式操作即可。</p>
+</li>
+</ul>
+<hr>
+<h3 id="解决方案">解决方案：</h3>
+<ul>
+<li>
+<pre><code>在pre-requests-script中，添加forge模块代码到全局变量中，提取的全局变量（字符串类型）通过eval函数使其在当前环境中执行，利用模块中提供的生成公钥对象和加密方法加密。
+</code></pre>
+</li>
+</ul>
+<h3 id="本次加密得到的产出物设置到全局变量中">本次加密得到的产出物，设置到全局变量中：</h3>
+<ol>
+<li>token前50位+时间戳 ，加密后得到的sign</li>
+<li>时间戳timestamp</li>
+</ol>
+<hr>
+<h3 id="1-下载forge使用gitbash">1、下载forge（使用gitbash）</h3>
+<pre><code>git clone https://github.com/digitalbazaar/forge.git
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://chloeeew.github.io/post-images/1627963730176.png" alt="" loading="lazy"></figure>
+<h3 id="2-安装forge使用nmp">2、安装forge（使用nmp）</h3>
+<pre><code>cd 到你gitbash下载的位置
+npm install
+</code></pre>
+<p>注意事项：这步我没有报错，如果有报错信息请看一下是否有下载node</p>
+<h3 id="3-在需要鉴权的接口请求的pre-request-script中设置">3、在需要鉴权的接口请求的pre-request-script中设置</h3>
+<p>前提：token在登录接口中已经设置到全局变量中了<br>
+注意事项：这里的公钥是需要项目开发提供（本文的公钥已做了脱敏处理）</p>
+<pre><code>if(!pm.globals.has(&quot;forgeJS&quot;)){
+    pm.sendRequest(&quot;https://raw.githubusercontent.com/loveiset/RSAForPostman/master/forge.js&quot;, function (err, res) {
+        if (err) {
+            console.log(&quot;hellworld&quot;)
+            console.log(err);
+            
+        } else {
+            pm.globals.set(&quot;forgeJS&quot;, res.text());
+        }
+    })
+}
+eval(postman.getGlobalVariable(&quot;forgeJS&quot;));
+pm.globals.unset(&quot;variable_key&quot;);
+pm.globals.set(&quot;variable_key&quot;, &quot;variable_value&quot;);
+ 
+ 
+// 这里的公钥需要项目开发者提供（pem文件公钥）
+const public_key = '-----BEGIN PUBLIC KEY-----\n' +
+        'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQ5ENTu9Z1LprzedE\n' +
+        'O3F7gs+7bzrgPsMl29LX8UoPYvIG8C604CprBQ4FkfnJp0WZyLq6sBr\n' +
+        'tuPorOc42+gLnFfyhJAwdZB6SqWfDg7bW+jNe5K555555lEMGo8Dg+S\n' +
+        'kKlZFc8Br7SHtbL2tQIDAQAB\n' +
+        '-----END PUBLIC KEY-----'
+ 
+var publicKey = forge.pki.publicKeyFromPem(public_key);//公钥
+var timestamp = Math.round(new Date().getTime()/1000);//时间戳
+var token = pm.environment.get(&quot;token&quot;)
+var tempStr = token.substring(0,50)+timestamp //拼接的token+时间戳
+ 
+//rsa加密得到签名
+var sign = forge.util.encode64(publicKey.encrypt(tempStr,'RSAES-PKCS1-V1_5',{md:forge.md.sha1.create(),mgf: forge.mgf.mgf1.create(forge.md.sha1.create())}));
+ 
+//将得到的产物设置到全局变量中
+pm.environment.set(&quot;timestamp&quot;,timestamp)
+pm.environment.set(&quot;sign&quot;,sign)
+</code></pre>
+<hr>
+<p>本人CSDN中有相同文章：https://blog.csdn.net/weizhi3320/article/details/117903607</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[python自动化测试-eval后数字运算得到无限小数]]></title>
+        <id>https://chloeeew.github.io/post/python-zi-dong-hua-ce-shi-eval-hou-shu-zi-yun-suan-de-dao-wu-xian-xiao-shu/</id>
+        <link href="https://chloeeew.github.io/post/python-zi-dong-hua-ce-shi-eval-hou-shu-zi-yun-suan-de-dao-wu-xian-xiao-shu/">
+        </link>
+        <updated>2021-03-12T14:47:07.000Z</updated>
+        <content type="html"><![CDATA[<h3 id="项目的自动化测试用例中数据库某条金额数据查询预期结果是查询前多200001元">项目的自动化测试用例中，数据库某条金额数据查询预期结果是查询前多2000.01元</h3>
+<p>譬如：测试该用例前做了前置sql查询获取金额为5000元，我的测试用例是增加2000.01元，预期执行用例后，在数据库查询到的金额应该为7000.01元（#money#+2000.01)</p>
+<p>对于这种用例的处理原本只是获取前置sql查询的内容，来替换#money#值，通过eval()来进行字符串转数字 以及 运算操作</p>
+<p>但实际通过eval后得到的7000.00999999999的无限小数，导致断言失败<br>
+<img src="https://chloeeew.github.io/post-images/1627962616221.png" alt="" loading="lazy"></p>
+<p>这是因为我们在运算的时候没有确定尾数导致，python会把我们的数据都先转换成二进制，然后再进行计算，例如<mark>经典的0.1+0.2并不等于0.3而是0.30000000004</mark></p>
+<pre><code>Python 3.9.1 (tags/v3.9.1:1e5d33e, Dec  7 2020, 17:08:21) [MSC v.1927 64 bit (AMD64)] on win32
+Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;license&quot; for more information.
+&gt;&gt;&gt; print(0.1+0.2)
+0.30000000000000004
+&gt;&gt;&gt; 0.1+0.2
+0.30000000000000004
+</code></pre>
+<h3 id="如何解决">如何解决？</h3>
+<p>我们可以在用例excel中把原本的expected:#money#+2000.01更改为round(#money#+2000.01,2)在代码除eval后，就会将计算得到的数据四舍五入并保留两位小数得到我们期待的<br>
+<img src="https://chloeeew.github.io/post-images/1627962623799.png" alt="" loading="lazy"><br>
+<img src="https://chloeeew.github.io/post-images/1627962628765.png" alt="" loading="lazy"></p>
+<p>本人CSDN有相同文章：https://blog.csdn.net/weizhi3320/article/details/118674484</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[🍉 关于博客]]></title>
+        <id>https://chloeeew.github.io/post/guan-yu-bo-zhu/</id>
+        <link href="https://chloeeew.github.io/post/guan-yu-bo-zhu/">
+        </link>
+        <updated>2021-01-01T03:50:08.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="博客都会写什么">🗣博客都会写什么？</h2>
+<ul>
+<li>测试相关的内容
+<ul>
+<li>学习笔记（总结、工具教程等）</li>
+<li>测试过程中无法在搜索引擎找到解决方法的问题</li>
+</ul>
+</li>
+</ul>
+<h2 id="为什么要在这里写博客">😁为什么要在这里写博客？</h2>
+<ul>
+<li>原CSDN地址：https://blog.csdn.net/weizhi3320</li>
+<li>现在把自己写的文章转移过来，方便管理了，也不需要看CSDN那么多广告了哈哈哈哈，另外一点gridea支持不同的主体风格，简约好看。加上自己申请的域名，博客归属感就更强了，以后写博客的欲望也up⬆️up⬆️了</li>
+</ul>
+<h2 id="关于我联系我">🍗关于我/联系我</h2>
+<p>请各位多多执教博主这位小年轻～ 有任何需要指正的地方欢迎联系呀～</p>
+<ul>
+<li>昵称：瓜瓜/Chloe</li>
+<li>邮箱：403505960@qq.com</li>
+<li>测试工作年限：2年</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[APP测试与WEB测试的区别(异同)]]></title>
+        <id>https://chloeeew.github.io/post/app-ce-shi-yu-web-ce-shi-de-qu-bie-yi-tong/</id>
+        <link href="https://chloeeew.github.io/post/app-ce-shi-yu-web-ce-shi-de-qu-bie-yi-tong/">
+        </link>
+        <updated>2020-08-05T13:38:37.000Z</updated>
+        <content type="html"><![CDATA[<h2 id="相同点">相同点：</h2>
+<ul>
+<li>功能测试层面而言：APP测试和web测试都是使用相同的测试用例测试方法（都用到等价类划分、边界值分析、正常和异常情况去考虑测试点）</li>
+<li>UI界面测试：都需要按照原型图和设计图检查UI，包括布局、风格和按钮等是否简洁美观、是否统一</li>
+<li>性能测试（服务器后台的性能测试）：加载翻页的速度、登录时长、内存是否溢出等，测试系统的稳定性</li>
+<li>安全测试：后台接口安全测试方式基本一致</li>
+</ul>
+<h2 id="不同点">不同点：</h2>
+<p>1.系统结构而言：web项目是基于B/S架构的，而app项目是C/S架构的</p>
+<p>2.APP基本的功能点测试外，还有属于app的特性测试<br>
+A）全新安装/卸载测试，升级测试、第三方软件安装测试等<br>
+B）对指纹、手势等独有的登录方式进行测试、单点多点登录<br>
+C）触控操作测试，两指三指长按短按、以及横竖屏等的测试<br>
+D）消息推送测试，测试在不同的手机推送方式下，用户能否正常接收正常查看推送</p>
+<p>3.兼容性测试：web项目考虑不同浏览器的兼容，app需要考虑不同操作系统、机型、屏幕、分辨率的兼容</p>
+<p>4.中断测试：来电接收信息低电量等操作会对app应用程序产生影响，所以要考虑人为中断、新任务中断以及意外中断等情况对app进行测试，包括前后台切换、横竖屏切换、待机等测试</p>
+<p>5.网络测试：4G与WIFI之间切换网络测试、无网测试、弱网（延迟丢包）测试、离线测试</p>
+<p>6.权限测试：手机权限测试包括扣费风险、隐私泄露、相册访问、录音定位允许</p>
+<p>7.安全测试：app中安装包是否可反编译代码、防二次打包、防内存篡改等</p>
+<p>8.性能测试：需要进行app客户端性能测试，包括app安装卸载响应时间、cpu内存电量的占用，需要使用专门的性能测试工具GT、instrument等工具。</p>
+<p>9.测试工具方面：app自动化工具使用Appium，Web一般使用Selenium</p>
+<hr>
+<p>本人CSDN中有相同内容博客：https://blog.csdn.net/weizhi3320/article/details/106016807</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Python元类-认识和应用]]></title>
+        <id>https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/</id>
+        <link href="https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/">
+        </link>
+        <updated>2020-04-06T15:03:16.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="元类metaclass">元类metaclass</h1>
+<h4 id="类的类型是什么">类的类型是什么？</h4>
+<p>元类，int、list等都是由元类创建的,type是Python的内建元类，任何类都有所属的元类（type）</p>
+<pre><code>print(type(1))
+print(type(int))
+---运行结果---
+&lt;class 'int'&gt;
+&lt;class 'type'&gt;
+</code></pre>
+<h4 id="元类能干什么">元类能干什么？</h4>
+<ul>
+<li>元类的核心思想，就是捣鼓类这个对象、使你能对其有着最高程度的控制权</li>
+</ul>
+<h4 id="元类和类的关系">元类和类的关系</h4>
+<p>元类metaclass可以创建元类，元类创建类（包括object也是由type创建的），类创建对象</p>
+<h2 id="如何使用元类创建类">如何使用元类创建类？</h2>
+<ul>
+<li>方法一：通过type函数创建</li>
+</ul>
+<p>type(类名, 父类以元组表示（针对继承的情况，可以为空），包含的属性用字典表示（名称和值）)<br>
+例子</p>
+<pre><code>def __init__(self,name):
+    self.name = name
+ 
+Student = type('Student',(object,),{'__init__':__init__,})
+aa = Student('chloee')
+print(Student)
+print(aa.name)
+------
+&lt;class '__main__.Student'&gt;
+chloee
+</code></pre>
+<ul>
+<li>方法二：继承type元类</li>
+</ul>
+<pre><code>class MyMetaclass(type):
+    def __new__(cls,name,bases,attrs):
+        &quot;&quot;&quot;
+        创建对象（这个对象是一个类）
+        name：字符串，类的名称
+        bases：元组(基础类1，基础类2……)
+        attrs：字典（__dict__属性）
+        &quot;&quot;&quot;
+        name = 'Person'
+        attrs['name'] = 'chloe'
+        attrs['age'] = 18
+        bases = (object,)
+        return type.__new__(cls,name,bases,attrs)
+ 
+class MyClass(object, metaclass=MyMetaclass):
+    pass
+ 
+ 
+if __name__ == '__main__':
+    print(MyClass.name)
+    
+    
+---运行结果--
+chloe
+</code></pre>
+<p>这两个创建的例子，好像都不是很能突出元类到底有什么用，感觉这...直接继承不就更好了吗？</p>
+<h3 id="应用例子例子是在另一个博主那找的稍微改动了一下">应用例子（例子是在另一个博主那找的，稍微改动了一下）</h3>
+<ul>
+<li>定义一个“人”（Person）类，它有三个方法：吃饭、睡觉、打游戏</li>
+<li>定义 Person 的三个子类“小张”（Zhang）、“小王”（Wang）、“小江”（Jiang）<br>
+定义“人”的子类“小周”（Zhou），使用元类， 要求他：<br>
+吃饭像小王一样快，能力<em>2<br>
+睡觉像小张一样香，能力</em>3<br>
+打游戏像小江一样熟练，能力*4</li>
+</ul>
+<pre><code>&quot;&quot;&quot;
+作为人类自然有吃喝玩的能力
+而三人只是在吃喝睡中有较强能力
+&quot;&quot;&quot;
+class Person:
+    def __init__(self):
+        self.ability = 1
+ 
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability)
+ 
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability)
+ 
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability)
+ 
+ 
+class Wang(Person):
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 2)
+ 
+ 
+class Zhang(Person):
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 3)
+ 
+ 
+class Jiang(Person):
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 4)
+ 小周使用元类获得最高的权限，他创建了元类，获得第一个继承的父类的吃方法，获得第二个继承的父类的睡觉方法，获得第三个继承父类的打游戏方法
+
+class MyMetaclass(type):
+    def __new__(cls, *args, **kwargs):
+        print(args)
+        name, bases, attrs = args[:3]
+        person1, person2, person3 = bases
+ 
+        def eat(self):
+            person1.eat(self)
+ 
+        def sleep(self):
+            person2.sleep(self)
+ 
+        def play_game(self):
+            person3.play_game(self)
+ 
+        attrs['eat'] = eat
+        attrs['sleep'] = sleep
+        attrs['play_game'] = play_game
+ 
+        return type(name,bases,attrs)
+ 
+ 
+ 
+ 
+class Zhou(Zhang,Jiang,Wang,metaclass=MyMetaclass):
+    pass
+注意这里小周他第一个继承的父类是小张，而小张的吃饭技能只是普通人类的水平
+
+这里我们可以再定义一个人，”小红“（Hong）她也想像（Zhou）想的那样能吃能睡能打好游戏，但她就只继承就行了，继承顺序与Zhou一样
+
+class Hong(Zhang,Jiang,Wang):
+    pass
+输出一下小红和小周继承结果
+
+if __name__ == '__main__':
+    h = Hong()
+    z = Zhou()
+    print('-------')
+    h.eat()
+    z.eat()
+    print('-------')
+    h.sleep()
+    z.sleep()
+    print('-------')
+    h.play_game()
+    z.play_game()
+ 
+ 
+---运行结果----
+-------
+Eat:  2
+Eat:  1
+-------
+Sleep:  3
+Sleep:  1
+-------
+play game:  4
+play game:  1
+</code></pre>
+<p>小红达到了她的目标（菱形继承），而小周因为改了继承顺序没对应上想要的人的能力</p>
+<ul>
+<li>如果是继承的话，无论是eat、sleep还是play game都会寻找继承类中的eat、sleep和play game方法，即会找到wang的吃饭方法，zhang的睡觉方法，以及jiang的play game方法，那么都是获得最强的能力</li>
+<li>但如果是创建元类的话，就能获得最大的控制权，按照继承的顺序获得对应人的能力，如果继承第一位是Wang，那么按照创建元类对象的方法来看，就调用Wang的吃方法，即能力<em>2。如果继承第一位是Jiang，那么就调用Jiang的吃方法，即能力只是</em>1。这样能很好的控制，继承哪个类的哪个方法</li>
+<li>我们接着再试一下，把三位强人的吃喝玩游戏能力都改为不同于普通人的能力，小红还能获得小王的吃能力、小张的睡能力和小江的玩游戏能力吗？</li>
+</ul>
+<pre><code>class Wang(Person):
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 2)
+ 
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 0.8)
+ 
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 0.7)
+ 
+ 
+class Zhang(Person):
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 3)
+ 
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 0.6)
+ 
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 0.99)
+ 
+ 
+class Jiang(Person):
+    def play_game(self):
+        print(&quot;play game: &quot;, self.ability * 4)
+ 
+    def sleep(self):
+        print(&quot;Sleep: &quot;, self.ability * 0.88)
+ 
+    def eat(self):
+        print(&quot;Eat: &quot;, self.ability * 0.77)
+ 
+ 
+class Hong(Wang,Zhang,Jiang):
+    pass
+ 
+class Zhou(Wang,Zhang,Jiang,metaclass=MyMetaclass):
+    pass
+ 
+ 
+if __name__ == '__main__':
+    h = Hong()
+    z = Zhou()
+    print('-------')
+    h.eat()
+    z.eat()
+    print('-------')
+    h.sleep()
+    z.sleep()
+    print('-------')
+    h.play_game()
+    z.play_game()
+Person类和MyMetaclass类没有变更
+
+那么输出的结果是，在继承顺序按照小王、小张、小江的情况下，小周能够如愿获得三人的能力
+
+-------
+Eat:  2
+Eat:  2
+-------
+Sleep:  0.8
+Sleep:  3
+-------
+play game:  0.7
+play game:  4
+</code></pre>
+<p>但其实貌似也只是理解一下有元类这么一个概念，好像也不太需要用上它哈哈哈。</p>
+<pre><code> ”元类就是深度的魔法，99%的用户应该根本不必为此操心。如果你想搞清楚究竟是否需要用到元类，那么你就不需要它。那些实际用到元类的人都非常清楚地知道他们需要做什么，而且根本不需要解释为什么要用元类“  
+</code></pre>
+<ul>
+<li>CSDN博客亦有相同内容：</li>
+<li>https://blog.csdn.net/weizhi3320/article/details/118575612</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Linux 防火墙 iptable命令详解]]></title>
+        <id>https://chloeeew.github.io/post/linux-fang-huo-qiang-iptable-ming-ling-xiang-jie/</id>
+        <link href="https://chloeeew.github.io/post/linux-fang-huo-qiang-iptable-ming-ling-xiang-jie/">
+        </link>
+        <updated>2020-03-29T13:10:11.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="一-iptables介绍">一、iptables介绍</h1>
+<ul>
+<li>iptables是Linux中对网络数据包进行处理的一个功能组件，就相当于防火墙，可以对经过的数据包进行处理，例如：数据包过滤、数据包转发等等，一般例如Ubuntu等Linux系统是默认自带启动的。</li>
+</ul>
+<h1 id="二-iptables结构">二、iptables结构</h1>
+<ul>
+<li>iptables其实是一堆规则，防火墙根据iptables里的规则，对收到的网络数据包进行处理。iptables里的数据组织结构分为：表、链、规则。</li>
+</ul>
+<h2 id="表tables">表（tables）##</h2>
+<ul>
+<li>表提供特定的功能，iptables里面有4个表： filter表、nat表、mangle表和raw表，分别用于实现包过滤、网络地址转换、包重构和数据追踪处理。<br>
+每个表里包含多个链。</li>
+</ul>
+<h2 id="链chains">链（chains）##</h2>
+<p>链（chains）是数据包传播的路径，每一条链其实就是众多规则中的一个检查清单，每一条链中可以有一 条或数条规则。当一个数据包到达一个链时，iptables就会从链中第一条规则开始检查，看该数据包是否满足规则所定义的条件。如果满足，系统就会根据 该条规则所定义的方法处理该数据包；否则iptables将继续检查下一条规则，如果该数据包不符合链中任一条规则，iptables就会根据该链预先定 义的默认策略来处理数据包。<br>
+<img src="https://chloeeew.github.io/post-images/1627962127333.png" alt="" loading="lazy"></p>
+<h2 id="表链结构">表链结构</h2>
+<p>1.filter表——三个链：INPUT、FORWARD、OUTPUT<br>
+作用：过滤数据包 内核模块：iptables_filter.</p>
+<p>2.Nat表——三个链：PREROUTING、POSTROUTING、OUTPUT<br>
+作用：用于网络地址转换（IP、端口） 内核模块：iptable_nat</p>
+<p>3.Mangle表——五个链：PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD<br>
+作用：修改数据包的服务类型、TTL、并且可以配置路由实现QOS内核模块</p>
+<p>4.Raw表——两个链：OUTPUT、PREROUTING<br>
+作用：决定数据包是否被状态跟踪机制处理</p>
+<h2 id="数据包流向">数据包流向</h2>
+<p>前面介绍了iptables的组织结构，下面一张图介绍了一个数据包如何依次穿过iptables的各个链和表的。<br>
+<img src="https://chloeeew.github.io/post-images/1627962162521.png" alt="" loading="lazy"></p>
+<h3 id="基本步骤如下">基本步骤如下：</h3>
+<p>数据包到达网络接口，比如 eth0。<br>
+进入 raw 表的 PREROUTING 链，这个链的作用是赶在连接跟踪之前处理数据包。<br>
+如果进行了连接跟踪，在此处理。<br>
+进入 mangle 表的 PREROUTING 链，在此可以修改数据包，比如 TOS 等。<br>
+进入 nat 表的 PREROUTING 链，可以在此做DNAT，但不要做过滤。<br>
+决定路由，看是交给本地主机还是转发给其它主机。</p>
+<h3 id="后面将分为2种情况">后面将分为2种情况：</h3>
+<p>数据包发送给本地主机，交由本地主机上层应用处理；<br>
+将数据包转发给其他主机来处理。</p>
+<p><strong>第一种情况</strong>，数据包要转发给其它主机：</p>
+<ol>
+<li>进入 mangle 表的 FORWARD 链，这里也比较特殊，这是在第一次路由决定之后，在进行最后的路由决定之前，我们仍然可以对数据包进行某些修改。</li>
+<li>进入 filter 表的 FORWARD 链，在这里我们可以对所有转发的数据包进行过滤。需要注意的是：经过这里的数据包是转发的，方向是双向的。</li>
+<li>进入 mangle 表的 POSTROUTING 链，到这里已经做完了所有的路由决定，但数据包仍然在本地主机，我们还可以进行某些修改。</li>
+<li>进入 nat 表的 POSTROUTING 链，在这里一般都是用来做SNAT ，不要在这里进行过滤。</li>
+<li>进入出去的网络接口。完毕。</li>
+</ol>
+<p><strong>第二种情况</strong>，数据包就是发给本地主机的，那么它会依次穿过：<br>
+7. 进入 mangle 表的 INPUT 链，这里是在路由之后，交由本地主机之前，我们也可以进行一些相应的修改。<br>
+8. 进入 filter 表的 INPUT 链，在这里我们可以对流入的所有数据包进行过滤，无论它来自哪个网络接口。<br>
+9. 交给本地主机的应用程序进行处理。<br>
+10. 处理完毕后进行路由决定，看该往那里发出。<br>
+11. 进入 raw 表的 OUTPUT 链，这里是在连接跟踪处理本地的数据包之前。<br>
+12. 连接跟踪对本地的数据包进行处理。<br>
+13. 进入 mangle 表的 OUTPUT 链，在这里我们可以修改数据包，但不要做过滤。<br>
+14. 进入 nat 表的 OUTPUT 链，可以对防火墙自己发出的数据做 NAT 。<br>
+15. 再次进行路由决定。<br>
+16. 进入 filter 表的 OUTPUT 链，可以对本地出去的数据包进行过滤。<br>
+17. 进入 mangle 表的 POSTROUTING 链，同上一种情况的第9步。注意，这里不光对经过防火墙的数据包进行处理，还对防火墙自己产生的数据包进行处理。<br>
+18. 进入 nat 表的 POSTROUTING 链，同上一种情况的第10步。<br>
+19. 进入出去的网络接口。完毕<br>
+20.</p>
+<h2 id="三-iptables">三、iptables</h2>
+<h3 id="iptables的基本语法格式">iptables的基本语法格式</h3>
+<pre><code>- iptables [-t 表名] 命令选项 ［链名］ ［条件匹配］ ［-j 目标动作或跳转
+- 说明：表名、链名用于指定 iptables命令所操作的表和链，命令选项用于指定管理iptables规则的方式（比如：插入、增加、删除、查看等；条件匹配用于指定对符合什么样 条件的数据包进行处理；目标动作或跳转用于指定数据包的处理方式（比如允许通过、拒绝、丢弃、跳转（Jump）给其它链处理。
+</code></pre>
+<h3 id="iptables命令的管理控制选项">iptables命令的管理控制选项</h3>
+<ol>
+<li>-A 在指定链的末尾添加（append）一条新的规则</li>
+<li>-D 删除（delete）指定链中的某一条规则，可以按规则序号和内容删除</li>
+<li>-I 在指定链中插入（insert）一条新的规则，默认在第一行添加</li>
+<li>-R 修改、替换（replace）指定链中的某一条规则，可以按规则序号和内容替换</li>
+<li>-L 列出（list）指定链中所有的规则进行查看</li>
+<li>-E 重命名用户定义的链，不改变链本身</li>
+<li>-F 清空（flush）</li>
+<li>-N 新建（new-chain）一条用户自己定义的规则链</li>
+<li>-X 删除指定表中用户自定义的规则链（delete-chain）</li>
+<li>-P 设置指定链的默认策略（policy）</li>
+<li>-Z 将所有表的所有链的字节和数据包计数器清零</li>
+<li>-n 使用数字形式（numeric）显示输出结果</li>
+<li>-v 查看规则表详细信息（verbose）的信息</li>
+<li>-V 查看版本(version)</li>
+<li>-h 获取帮助（help)</li>
+</ol>
+<h3 id="防火墙处理数据包的四种方式">防火墙处理数据包的四种方式</h3>
+<ol>
+<li>ACCEPT 允许数据包通过</li>
+<li>DROP 直接丢弃数据包，不给任何回应信息</li>
+<li>REJECT 拒绝数据包通过，必要时会给数据发送端一个响应的信息。</li>
+<li>LOG 用于针对特定的数据包打log，在/var/log/messages文件中记录日志信息，然后将数据包传递给下一条规则</li>
+<li>TRACE这个只能针对raw中的table，是用来对数据进行追踪的，用于debug.</li>
+</ol>
+<h3 id="iptables防火墙规则的保存与恢复">iptables防火墙规则的保存与恢复</h3>
+<p>iptables-save把规则保存到文件中，再由目录rc.d下的脚本（/etc/rc.d/init.d/iptables）自动装载<br>
+使用命令</p>
+<pre><code>iptables-save
+</code></pre>
+<p>来保存规则。一般用</p>
+<pre><code>iptables-save &gt; /etc/sysconfig/iptables
+</code></pre>
+<p>生成保存规则的文件 /etc/sysconfig/iptables，也可以用:</p>
+<pre><code>service iptables save
+</code></pre>
+<h2 id="iptables防火墙常用的策略">iptables防火墙常用的策略</h2>
+<p>拒绝进入防火墙的所有ICMP协议数据包</p>
+<pre><code>iptables -I INPUT -p icmp -j REJECT
+</code></pre>
+<p>允许防火墙转发除ICMP协议以外的所有数据包</p>
+<pre><code>iptables -A FORWARD -p ! icmp -j ACCEPT
+</code></pre>
+<p>说明：使用“！”可以将条件取反。</p>
+<p>允许本机开放从TCP端口20-1024提供的应用服务。</p>
+<pre><code>iptables -A INPUT -p tcp --dport 20:1024 -j ACCEPT 
+iptables -A OUTPUT -p tcp --sport 20:1024 -j ACCEPT
+</code></pre>
+<p>从一台主机转发到另一台主机<br>
+注意转发首先需要按照前面的开启转发设置</p>
+<p>(相同端口)<br>
+从192.168.0.132:21521(新端口)访问192.168.0.211:1521端口</p>
+<pre><code>iptables -t nat -I PREROUTING -p tcp --dport 1521 -j DNAT --to 192.168.0.211
+iptables -t nat -I POSTROUTING -p tcp --dport 1521 -j MASQUERADE
+</code></pre>
+<p>（不同端口）<br>
+不同端口转发(192.168.0.132上开通21521端口访问</p>
+<pre><code>iptables -t nat -A PREROUTING -p tcp -m tcp --dport 21521 -j DNAT --to-destination 192.168.0.211:1521
+iptables -t nat -A POSTROUTING -s 192.168.0.0/16 -d 192.168.0.211 -p tcp -m tcp --dport 1521 -j SNAT --to-source 192.168.0.132
+</code></pre>
+<p>以上两条等价配置(更简单[指定网卡]):</p>
+<pre><code>iptables -t nat -A PREROUTING -p tcp -i eth0 --dport 31521 -j DNAT --to 192.168.0.211:1521
+iptables -t nat -A POSTROUTING -j MASQUERADE
+</code></pre>
+<p>(用iptables做本机端口转发)</p>
+<pre><code>iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
+</code></pre>
+<p>其他一些指令可以继续查看：<br>
+http://www.cnblogs.com/metoy/p/4320813.html</p>
+<p>我要用到的是将本地qemu仿真的一个虚拟机中的IP:PORT给映射到主机的端口上来对外服务：</p>
+<p>qemu仿真系统IP为192.168.0.1，仿真系统与主机的桥接的网卡上，主机的ip为192.168.0.2，主机对外ip为172.18.236.82，将虚拟机中的80端口映射到主机的8080端口：</p>
+<pre><code>sudo iptables -t nat -A PREROUTING -d 172.18.236.82 -p tcp --dport 8081 -j DNAT --to-destination 192.168.0.1:80
+sudo iptables -t nat -A POSTROUTING -d 192.168.0.1 -p tcp --dport 80 -j SNAT --to 192.168.0.2
+</code></pre>
+<h2 id="四-python对iptables的操作包">四、python对iptables的操作包</h2>
+<p>python中有对iptables的操作包: iptc<br>
+参考主页：<br>
+https://github.com/ldx/python-iptables</p>
+<p>Linux上安装：<br>
+针对python的：</p>
+<pre><code>pip install --upgrade python-iptables
+</code></pre>
+<p>针对python3的：</p>
+<pre><code>pip3 install --upgrade python-iptables
+</code></pre>
+<p>在python文件中导入：</p>
+<pre><code>import iptc
+</code></pre>
+<p>官网里面有对该包的介绍和很多例子，但没有一个所有指令的完整归纳，有些指令参数不知道在iptc包中用什么，后面总结了在加在这~</p>
+<h2 id="五-iptables的debug">五、 iptables的debug</h2>
+<p>在对问题进行处理时，我们肯定会遇到debug的需求，针对iptables的debug主要是通过看Log.</p>
+<h3 id="51-打开iptables的log日志">5.1. 打开iptables的log日志</h3>
+<p>首先我们需要打开iptables的log记录功能，让系统将相应的log输出。<br>
+默认iptables的日志是输出到/var/log/message文件中，当然对没有开启log功能的时候，不会有任何log输出。<br>
+为了便于debug，我们将iptables的log输出到/var/log/iptables.log文件。<br>
+开启log输出针对不同系统会不同，主要是以下2种：</p>
+<h4 id="511-针对用syslog的系统">5.1.1 针对用syslog的系统</h4>
+<p>如果系统存在以下文件： /etc/syslog.conf， 我们在/etc/syslog.conf中添加以下几行：</p>
+<p>kern.warning /var/log/iptables.log<br>
+kern.debug /var/log/iptables.log<br>
+然后重启syslog:<br>
+sudo service syslog restart</p>
+<h4 id="512-针对用rsyslog的系统">5.1.2 针对用rsyslog的系统</h4>
+<p>如果系统存在以下文件： /etc/rsyslog.conf， 我们在/etc/syslog.conf中添加以下几行：</p>
+<p>kern.warning /var/log/iptables.log<br>
+kern.debug /var/log/iptables.log<br>
+然后重启syslog:<br>
+sudo service rsyslog restart</p>
+<h3 id="52-针对需要查看的数据添加iptables规则使其打印log">5.2 针对需要查看的数据，添加iptables规则使其打印log</h3>
+<p>开启log输出后，我们需要添加相应的iptables规则，使其打印我们需要的log信息，主要有2种方法：</p>
+<h3 id="521-trace方法">5.2.1 TRACE方法</h3>
+<p>在前面的数据包流向图中，raw表中的链是用来对数据包进行追踪的，我们可以在其链中添加TRACE操作规则，使其对相应的流量进行追踪，例如下面的例子将追踪进入的目标地址为192.168.0.211的数据包。</p>
+<pre><code>sudo iptables -t raw -I PREROUTING -d 192.168.0.211 -j TRACE
+</code></pre>
+<h4 id="522-log方法">5.2.2 LOG方法</h4>
+<p>如果想在指定的一个表的一个链中加入一条规则，当在这个链中遇到特定的数据包，则记录一条log信息。例如下面的指令将使得在nat的PREROUTING链中遇到目标地址为100.69.73.114时，则记录一条log。</p>
+<pre><code>sudo iptables -t nat -I PREROUTING  -d 100.69.73.114 -j LOG --log-level 4
+5.3 查看log信息
+sudo tail -f /var/log/iptables.log
+</code></pre>
+<h3 id="须知">须知</h3>
+<p>博主CSDN中有相同文章：<br>
+https://blog.csdn.net/weizhi3320/article/details/105186350</p>
+<p>原文参考处：<br>
+https://www.cnblogs.com/qwertwwwe/p/9452370.html</p>
+<h2 id="参考并转载于以下链接httpwwwcnblogscommetoyp4320813htmlhttpwwwha97com4093html">参考并转载于以下链接：<br>
+http://www.cnblogs.com/metoy/p/4320813.html<br>
+http://www.ha97.com/4093.html</h2>
 ]]></content>
     </entry>
 </feed>
