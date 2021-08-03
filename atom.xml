@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Notes of Chloe</title>
-    <updated>2021-08-03T04:31:21.979Z</updated>
+    <updated>2021-08-03T07:11:11.553Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -10,6 +10,107 @@
     <logo>https://chloeeew.github.io/images/avatar.png</logo>
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Notes of Chloe</rights>
+    <entry>
+        <title type="html"><![CDATA[🔆Gridea+Github+域名：搭建一个属于自己的博客网站]]></title>
+        <id>https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/</id>
+        <link href="https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/">
+        </link>
+        <updated>2021-08-03T06:07:43.000Z</updated>
+        <content type="html"><![CDATA[<p><em>在搜索引擎学习逛博客或者搜问题的时候，发现很多人都不在用广告满天飞的某DN，也不喜欢用排版难看的某圆，而是用自己的域名搭了属于自己的博客，这让我非常心动，前些日子也自己按照一些“教程”搭了一个，发现里面的小坑挺多的，而这些教程都没有清晰说明，今天趁稍微有空，写一下</em></p>
+<h1 id="一-gridea生成静态网页">一、Gridea生成静态网页</h1>
+<ul>
+<li>它可以让你不需要写前端就能生成一个漂亮的带样式的静态网页，能够跟github博客集成到一起，除了Gridea还有其他的（抱歉又忘了名字），但需要自己去搭服务，搞数据库，这流程太漫长了，所以综合考虑Gridea是最方便简单的<br>
+<img src="https://chloeeew.github.io/post-images/1627974530187.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="1-下载客户端待用">1、下载客户端待用</h3>
+<ul>
+<li>网址：https://gridea.dev/</li>
+<li>根据自己的操作系统下载客户端即可<br>
+<img src="https://chloeeew.github.io/post-images/1627974495377.png" alt="" loading="lazy"></li>
+</ul>
+<h1 id="二-github创建仓库并授权给gridea">二、Github创建仓库并授权给Gridea</h1>
+<h3 id="1-仓库命名">1、仓库命名</h3>
+<ul>
+<li>Repository name的命名规则
+<ul>
+<li>创建新的仓库后，命名为用户名.github.io</li>
+</ul>
+</li>
+</ul>
+<pre><code>username.github.io
+</code></pre>
+<h3 id="2-github给gridea">2、Github给Gridea</h3>
+<ul>
+<li>github 中 右上角Setting进入设置</li>
+<li>菜单栏中找到Developer settings</li>
+<li>选择Generate new token</li>
+<li>新token命名随意，但需要把下方授权内容中repo所有项勾选<br>
+生成了token之后一定要马上把生成码复制起来（忘了的话，删了重新创建token就可以了）<br>
+<img src="https://chloeeew.github.io/post-images/1627974556144.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="3-token密钥给到gridea">3、token密钥给到Gridea</h3>
+<ul>
+<li>如图，填写后保存并且按检测远程连接</li>
+<li>连接成功后，点击左下角的同步<br>
+<img src="https://chloeeew.github.io/post-images/1627974575803.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="三-腾讯云购买域名">三、腾讯云购买域名</h3>
+<ul>
+<li>https://dnspod.cloud.tencent.com/
+<ul>
+<li>只要名字够特别，域名10年都不贵</li>
+</ul>
+</li>
+</ul>
+<h4 id="注意事项">注意事项</h4>
+<ol>
+<li>购买前要在腾讯云实名认证</li>
+</ol>
+<h3 id="四-腾讯云dns服务器添加记录">四、腾讯云DNS服务器添加记录</h3>
+<ul>
+<li>右上角控制台-&gt; DNS解析DNS pod -&gt;域名解析列表-&gt;点击刚刚购买的域名-&gt;添加记录</li>
+</ul>
+<h4 id="注意事项-2">注意事项</h4>
+<p>1、主机记录和记录类型以及记录值要按照图的顺序一一填写，切勿错乱<br>
+2、第二行IPv4要自行在cmd上ping一下（username是自己的用户名），ping通后能得到对应的服务器ip地址<br>
+3、配置好记录后，DNS解析需要一定时间</p>
+<pre><code>ping username.github.io
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://chloeeew.github.io/post-images/1627974621739.png" alt="" loading="lazy"></figure>
+<h3 id="五-将域名填写到gridea-远程-cname中">五、将域名填写到Gridea-&gt;远程-&gt;Cname中</h3>
+<ul>
+<li>如第二步第三小节图，填写后重新按一下保存+检测远程连接+同步<br>
+<img src="https://chloeeew.github.io/post-images/1627974575803.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="六-在github中为博客加上ssl">六、在github中为博客加上SSL</h3>
+<ol>
+<li>回到github的io项目中，选择项目setting</li>
+<li>选择菜单中的Pages中拉到最下方，勾选ENFORCE HTTPS<br>
+<img src="https://chloeeew.github.io/post-images/1627974629586.png" alt="" loading="lazy"></li>
+</ol>
+<h3 id="七-最后的检测域名现状">七、最后的检测域名现状</h3>
+<ul>
+<li>https://zijian.aliyun.com</li>
+<li>填写自己的域名，如果能满足以下检查点，说明已经搭建好了</li>
+</ul>
+<h4 id="检查点">检查点</h4>
+<ol>
+<li>DNS检查：域名递归解析正常</li>
+<li>网站检查：<br>
+3. Ping检查正常<br>
+4. 网站状态码正常<br>
+5. 网站不在工信部黑名单<br>
+5. <strong>网站服务器在国外，所以不需要备案</strong></li>
+<li>域名检查：域名状态和有效期正常</li>
+</ol>
+<h3 id="最后最后再说一遍的注意事项">最后最后再说一遍的注意事项</h3>
+<ol>
+<li>DNS记录不能把CNAME和@乱序了！！</li>
+<li>一开始配置好的内容，需要一点时间让它去解析，切勿急躁</li>
+<li>如果按照这个步骤还有任何问题，请联系～</li>
+</ol>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Postman完成RSA加密并使用加密所得鉴权]]></title>
         <id>https://chloeeew.github.io/post/postman-wan-cheng-rsa-jia-mi-bing-shi-yong-jia-mi-suo-de-jian-quan/</id>
