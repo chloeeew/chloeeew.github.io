@@ -1,0 +1,277 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>top和iftop看资源占用以及网络流量情况 | Notes of Chloe</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1628067412358">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="top和iftop看资源占用以及网络流量情况 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="top命令
+
+top常用的性能分析工具，实时显示系统中各进程的资源占用状况，用q退出
+从图中可以分为两个部分来看，上面是总体的情况，下面是每个进程CPU和内存的占用情况
+
+
+第一行 系统运行时间及负载
+
+当前系统时间、up 多少days 多..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1628067412358" alt="">
+  </a>
+  <h1 class="site-title">
+    Notes of Chloe
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              top和iftop看资源占用以及网络流量情况
+            </h2>
+            <div class="post-info">
+              <span>
+                08-04
+              </span>
+              <span>
+                3 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="top命令">top命令</h1>
+<ul>
+<li><em>top常用的性能分析工具，实时显示系统中各进程的资源占用状况，用q退出</em></li>
+<li>从图中可以分为两个部分来看，上面是总体的情况，下面是每个进程CPU和内存的占用情况<br>
+<img src="https://chloeeew.github.io/post-images/1628067376948.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="第一行-系统运行时间及负载">第一行 系统运行时间及负载</h3>
+<ul>
+<li>当前系统时间、up 多少days 多少min 服务器已经启动了多长时间（服务器稳定性的查看点，可以看服务器多长时间没有自动重启了）</li>
+<li>2 users当前有多少人通过客户端连接到这台服务器上（1个人可以用多个客户端上登录，就显示多少个用户）</li>
+<li>load average当前服务器1分钟、5分钟、15分钟运行压力平均负载（功能测试时候，发起请求服务器很长时间没有返回，网站很卡）
+<ul>
+<li>1分钟值高证明当前要处理的请求多</li>
+<li><em>当前显示页面按下1</em>可以显示处多少当前有多少个CPU（第三行%Cpu会显示，例如%Cpu0就是单核，这样再去判断压力负载情况，load average的值和核数成正相关，如果核数高load average的值高一点也正常（4核-平均负载0.8--正常--1个核都没完全用上，1核--平均负载0.8--异常）</li>
+</ul>
+</li>
+</ul>
+<h3 id="第二行-task进程">第二行 Task进程</h3>
+<ul>
+<li>一共有多少个进程</li>
+<li>正在运行的进程</li>
+<li>睡眠的进程</li>
+<li>停止了的进程</li>
+<li>僵尸进程</li>
+</ul>
+<h3 id="第三行cpu整体情况">第三行CPU整体情况</h3>
+<ul>
+<li>us（user space用户空间占用的cpu百分比）</li>
+<li>sy（系统内核占用cpu的百分比）</li>
+<li>ni （进程优先级改变占cpu百分比）----在下方进程表中看NI值，如果有数值证明进程正在改变优先级（插队）</li>
+<li>id（空闲cpu百分比）---服务器有多少CPU处于空闲，服务器没什么压力，值越大越好</li>
+<li>wa（IO等待占用cpu百分比）</li>
+<li>hi（hardware IRQ硬中断占用百分比--意外中断）</li>
+<li>si（软中断---自主中断）</li>
+<li>st（hypervisor管理程序占用百分比）
+<ul>
+<li><em>按下t，可以知道整体cpu的使用情况</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="第四-五行-内存使用情况">第四、五行 内存使用情况</h3>
+<ul>
+<li>内存总量、空闲内存总量、缓存的总量</li>
+<li>swap交换分区
+<ul>
+<li><em>按下m可以知道内存使用百分比</em></li>
+</ul>
+</li>
+</ul>
+<h3 id="下方进程状态行">下方进程状态行</h3>
+<ul>
+<li>PR：优先级（PR越小优先级越高）</li>
+<li>VIRT：虚拟内存使用量</li>
+<li>RES：使用物理内存</li>
+<li>SHR：共享内存大小</li>
+<li>TIME+：占用CPU总时长</li>
+<li>%cpu：cpu使用率</li>
+<li>%mem：内存使用率</li>
+<li>COMMAND：命令/进程</li>
+</ul>
+<hr>
+<h1 id="iftop命令">iftop命令</h1>
+<ul>
+<li>可以知道网络流量情况</li>
+<li>是实时的流量工具<br>
+<img src="https://chloeeew.github.io/post-images/1628067401439.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="安装">安装</h3>
+<ul>
+<li>iftop不能直接使用，需要安装</li>
+</ul>
+<pre><code>yum install -y iftop
+</code></pre>
+<h3 id="各字段代表含义">各字段代表含义</h3>
+<ul>
+<li>=&gt;代表发送数据</li>
+<li>&lt;=代表接收数据</li>
+<li>TX：发送</li>
+<li>RX：接受</li>
+<li>TOTAL：全部的流量</li>
+<li>cum：目前累积流量</li>
+<li>peak：峰值流量</li>
+<li>rates：平均值，2秒，10秒，40秒的平均流量</li>
+<li>t 切换显示状态，接受、发送数据</li>
+<li>p 显示端口</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#top%E5%91%BD%E4%BB%A4">top命令</a><br>
+*
+<ul>
+<li><a href="#%E7%AC%AC%E4%B8%80%E8%A1%8C-%E7%B3%BB%E7%BB%9F%E8%BF%90%E8%A1%8C%E6%97%B6%E9%97%B4%E5%8F%8A%E8%B4%9F%E8%BD%BD">第一行 系统运行时间及负载</a></li>
+<li><a href="#%E7%AC%AC%E4%BA%8C%E8%A1%8C-task%E8%BF%9B%E7%A8%8B">第二行 Task进程</a></li>
+<li><a href="#%E7%AC%AC%E4%B8%89%E8%A1%8Ccpu%E6%95%B4%E4%BD%93%E6%83%85%E5%86%B5">第三行CPU整体情况</a></li>
+<li><a href="#%E7%AC%AC%E5%9B%9B-%E4%BA%94%E8%A1%8C-%E5%86%85%E5%AD%98%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5">第四、五行 内存使用情况</a></li>
+<li><a href="#%E4%B8%8B%E6%96%B9%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81%E8%A1%8C">下方进程状态行</a></li>
+</ul>
+</li>
+<li><a href="#iftop%E5%91%BD%E4%BB%A4">iftop命令</a><br>
+*
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a></li>
+<li><a href="#%E5%90%84%E5%AD%97%E6%AE%B5%E4%BB%A3%E8%A1%A8%E5%90%AB%E4%B9%89">各字段代表含义</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/python-die-dai-qi-he-sheng-cheng-qi-sui-ji/">
+              <h3 class="post-title">
+                Python 迭代器和生成器随记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
