@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Notes of Chloe</title>
-    <updated>2021-08-06T02:07:45.789Z</updated>
+    <updated>2021-08-06T02:29:29.896Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -10,6 +10,87 @@
     <logo>https://chloeeew.github.io/images/avatar.png</logo>
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Notes of Chloe</rights>
+    <entry>
+        <title type="html"><![CDATA[关键字驱动的自动化测试]]></title>
+        <id>https://chloeeew.github.io/post/guan-jian-zi-qu-dong-de-zi-dong-hua-ce-shi/</id>
+        <link href="https://chloeeew.github.io/post/guan-jian-zi-qu-dong-de-zi-dong-hua-ce-shi/">
+        </link>
+        <updated>2021-07-22T09:12:07.000Z</updated>
+        <content type="html"><![CDATA[<ul>
+<li>除了数据驱动测试外，还有一个在自动化测试的驱动测试：关键字驱动，常用于在测试开发中</li>
+<li>这样的关键字驱动让我想起robot framework也是也是以关键字驱动的自动化测试</li>
+</ul>
+<h4 id="数据驱动测试">数据驱动测试</h4>
+<ul>
+<li>测试逻辑和数据表（列表，excel表格，yaml表)存储下来</li>
+<li>数据 --&gt;  自动化测试逻辑</li>
+</ul>
+<h2 id="关键字驱动测试">关键字驱动测试</h2>
+<ul>
+<li>分开测试<strong>数据、动作和操作</strong>
+<ul>
+<li>动作和操作以关键字的形式表现出来，例如click、find、find_element（偏测开了，可以直接在开发好的自动化系统中选择click）</li>
+<li>动作、数据 -----&gt;自动化测试逻辑</li>
+</ul>
+</li>
+</ul>
+<pre><code>-
+  action: &quot;goto&quot;
+  params:
+    url: &quot;https://v4.ketangpai.com/User/login.html&quot;
+-
+  action: &quot;fill&quot;
+  params:
+    locator: ['name', 'account']
+    data: 'wagyu2017@163.com'
+-
+  action: &quot;fill&quot;
+  params:
+    locator: ['name', 'pass']
+    data: 'admin123456'
+-
+  action: &quot;click&quot;
+  params:
+    locator: ['xpath', &quot;//div[contains(@class, 'pt-login')]/a[@class='btn-btn']&quot;]
+-
+  name: &quot;说明操作&quot;
+  action: &quot;click&quot;
+  params:
+    locator: ['xpath', &quot;//*[text()='熟悉  课堂派']&quot;]
+</code></pre>
+<ul>
+<li>关键字文件params中的参数要和实际方法形参命名相同</li>
+<li>只需要编写一个测试用例就能够把所有操作执行</li>
+</ul>
+<pre><code>  from common.basepage import BasePage
+import yaml
+def test_case(get_driver):
+    &quot;&quot;&quot;运行测试用例&quot;&quot;&quot;
+    driver = get_driver
+    d = BasePage(driver)
+    # 打开关键字驱动的表，yaml
+    file = r'D:\classes\web_auto_testing\lesson12\test_add_class.yaml'
+    with open(file, encoding='utf-8') as f:
+        steps = yaml.safe_load(f)
+    for step in steps:
+       # step = {&quot;action&quot;: &quot;goto&quot;, &quot;params&quot;:...}
+       action = step['action']
+       # 要使用的操作：goto, click, fill
+       method = getattr(d, action)
+       # 要使用的参数：url,  locator
+       params = step['params']
+       # 调用 basepage 的方法
+       method(**params)
+
+# 使用关键字驱动， test_case 是通用的。
+</code></pre>
+<h4 id="关键字驱动测试的好处">关键字驱动测试的好处</h4>
+<ul>
+<li>只需要维护表格就可以了，把动作分离出去了</li>
+<li>实现了自动化测试的无代码化，所有的用例都可以用同一个测试代码块</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Python 那些好用的函数（含高阶函数）]]></title>
         <id>https://chloeeew.github.io/post/python-na-xie-hao-yong-de-han-shu-han-gao-jie-han-shu/</id>
@@ -818,255 +899,6 @@ D）消息推送测试，测试在不同的手机推送方式下，用户能否�
 <p>9.测试工具方面：app自动化工具使用Appium，Web一般使用Selenium</p>
 <hr>
 <p>本人CSDN中有相同内容博客：https://blog.csdn.net/weizhi3320/article/details/106016807</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python元类-认识和应用]]></title>
-        <id>https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/</id>
-        <link href="https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/">
-        </link>
-        <updated>2020-04-06T15:03:16.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="元类metaclass">元类metaclass</h1>
-<h4 id="类的类型是什么">类的类型是什么？</h4>
-<p>元类，int、list等都是由元类创建的,type是Python的内建元类，任何类都有所属的元类（type）</p>
-<pre><code>print(type(1))
-print(type(int))
----运行结果---
-&lt;class 'int'&gt;
-&lt;class 'type'&gt;
-</code></pre>
-<h4 id="元类能干什么">元类能干什么？</h4>
-<ul>
-<li>元类的核心思想，就是捣鼓类这个对象、使你能对其有着最高程度的控制权</li>
-</ul>
-<h4 id="元类和类的关系">元类和类的关系</h4>
-<p>元类metaclass可以创建元类，元类创建类（包括object也是由type创建的），类创建对象</p>
-<h2 id="如何使用元类创建类">如何使用元类创建类？</h2>
-<ul>
-<li>方法一：通过type函数创建</li>
-</ul>
-<p>type(类名, 父类以元组表示（针对继承的情况，可以为空），包含的属性用字典表示（名称和值）)<br>
-例子</p>
-<pre><code>def __init__(self,name):
-    self.name = name
- 
-Student = type('Student',(object,),{'__init__':__init__,})
-aa = Student('chloee')
-print(Student)
-print(aa.name)
-------
-&lt;class '__main__.Student'&gt;
-chloee
-</code></pre>
-<ul>
-<li>方法二：继承type元类</li>
-</ul>
-<pre><code>class MyMetaclass(type):
-    def __new__(cls,name,bases,attrs):
-        &quot;&quot;&quot;
-        创建对象（这个对象是一个类）
-        name：字符串，类的名称
-        bases：元组(基础类1，基础类2……)
-        attrs：字典（__dict__属性）
-        &quot;&quot;&quot;
-        name = 'Person'
-        attrs['name'] = 'chloe'
-        attrs['age'] = 18
-        bases = (object,)
-        return type.__new__(cls,name,bases,attrs)
- 
-class MyClass(object, metaclass=MyMetaclass):
-    pass
- 
- 
-if __name__ == '__main__':
-    print(MyClass.name)
-    
-    
----运行结果--
-chloe
-</code></pre>
-<p>这两个创建的例子，好像都不是很能突出元类到底有什么用，感觉这...直接继承不就更好了吗？</p>
-<h3 id="应用例子例子是在另一个博主那找的稍微改动了一下">应用例子（例子是在另一个博主那找的，稍微改动了一下）</h3>
-<ul>
-<li>定义一个“人”（Person）类，它有三个方法：吃饭、睡觉、打游戏</li>
-<li>定义 Person 的三个子类“小张”（Zhang）、“小王”（Wang）、“小江”（Jiang）<br>
-定义“人”的子类“小周”（Zhou），使用元类， 要求他：<br>
-吃饭像小王一样快，能力<em>2<br>
-睡觉像小张一样香，能力</em>3<br>
-打游戏像小江一样熟练，能力*4</li>
-</ul>
-<pre><code>&quot;&quot;&quot;
-作为人类自然有吃喝玩的能力
-而三人只是在吃喝睡中有较强能力
-&quot;&quot;&quot;
-class Person:
-    def __init__(self):
-        self.ability = 1
- 
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability)
- 
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability)
- 
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability)
- 
- 
-class Wang(Person):
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 2)
- 
- 
-class Zhang(Person):
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 3)
- 
- 
-class Jiang(Person):
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 4)
- 小周使用元类获得最高的权限，他创建了元类，获得第一个继承的父类的吃方法，获得第二个继承的父类的睡觉方法，获得第三个继承父类的打游戏方法
-
-class MyMetaclass(type):
-    def __new__(cls, *args, **kwargs):
-        print(args)
-        name, bases, attrs = args[:3]
-        person1, person2, person3 = bases
- 
-        def eat(self):
-            person1.eat(self)
- 
-        def sleep(self):
-            person2.sleep(self)
- 
-        def play_game(self):
-            person3.play_game(self)
- 
-        attrs['eat'] = eat
-        attrs['sleep'] = sleep
-        attrs['play_game'] = play_game
- 
-        return type(name,bases,attrs)
- 
- 
- 
- 
-class Zhou(Zhang,Jiang,Wang,metaclass=MyMetaclass):
-    pass
-注意这里小周他第一个继承的父类是小张，而小张的吃饭技能只是普通人类的水平
-
-这里我们可以再定义一个人，”小红“（Hong）她也想像（Zhou）想的那样能吃能睡能打好游戏，但她就只继承就行了，继承顺序与Zhou一样
-
-class Hong(Zhang,Jiang,Wang):
-    pass
-输出一下小红和小周继承结果
-
-if __name__ == '__main__':
-    h = Hong()
-    z = Zhou()
-    print('-------')
-    h.eat()
-    z.eat()
-    print('-------')
-    h.sleep()
-    z.sleep()
-    print('-------')
-    h.play_game()
-    z.play_game()
- 
- 
----运行结果----
--------
-Eat:  2
-Eat:  1
--------
-Sleep:  3
-Sleep:  1
--------
-play game:  4
-play game:  1
-</code></pre>
-<p>小红达到了她的目标（菱形继承），而小周因为改了继承顺序没对应上想要的人的能力</p>
-<ul>
-<li>如果是继承的话，无论是eat、sleep还是play game都会寻找继承类中的eat、sleep和play game方法，即会找到wang的吃饭方法，zhang的睡觉方法，以及jiang的play game方法，那么都是获得最强的能力</li>
-<li>但如果是创建元类的话，就能获得最大的控制权，按照继承的顺序获得对应人的能力，如果继承第一位是Wang，那么按照创建元类对象的方法来看，就调用Wang的吃方法，即能力<em>2。如果继承第一位是Jiang，那么就调用Jiang的吃方法，即能力只是</em>1。这样能很好的控制，继承哪个类的哪个方法</li>
-<li>我们接着再试一下，把三位强人的吃喝玩游戏能力都改为不同于普通人的能力，小红还能获得小王的吃能力、小张的睡能力和小江的玩游戏能力吗？</li>
-</ul>
-<pre><code>class Wang(Person):
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 2)
- 
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 0.8)
- 
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 0.7)
- 
- 
-class Zhang(Person):
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 3)
- 
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 0.6)
- 
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 0.99)
- 
- 
-class Jiang(Person):
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 4)
- 
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 0.88)
- 
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 0.77)
- 
- 
-class Hong(Wang,Zhang,Jiang):
-    pass
- 
-class Zhou(Wang,Zhang,Jiang,metaclass=MyMetaclass):
-    pass
- 
- 
-if __name__ == '__main__':
-    h = Hong()
-    z = Zhou()
-    print('-------')
-    h.eat()
-    z.eat()
-    print('-------')
-    h.sleep()
-    z.sleep()
-    print('-------')
-    h.play_game()
-    z.play_game()
-Person类和MyMetaclass类没有变更
-
-那么输出的结果是，在继承顺序按照小王、小张、小江的情况下，小周能够如愿获得三人的能力
-
--------
-Eat:  2
-Eat:  2
--------
-Sleep:  0.8
-Sleep:  3
--------
-play game:  0.7
-play game:  4
-</code></pre>
-<p>但其实貌似也只是理解一下有元类这么一个概念，好像也不太需要用上它哈哈哈。</p>
-<pre><code> ”元类就是深度的魔法，99%的用户应该根本不必为此操心。如果你想搞清楚究竟是否需要用到元类，那么你就不需要它。那些实际用到元类的人都非常清楚地知道他们需要做什么，而且根本不需要解释为什么要用元类“  
-</code></pre>
-<ul>
-<li>CSDN博客亦有相同内容：</li>
-<li>https://blog.csdn.net/weizhi3320/article/details/118575612</li>
-</ul>
 ]]></content>
     </entry>
 </feed>

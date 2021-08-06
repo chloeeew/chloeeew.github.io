@@ -2,29 +2,23 @@
   <head>
     <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>🍉 关于博客 | Notes of Chloe</title>
+<title>关键字驱动的自动化测试 | Notes of Chloe</title>
 <link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1628216961164">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
 <link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="🍉 关于博客 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="关键字驱动的自动化测试 | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
 
 
 
-    <meta name="description" content="🗣博客都会写什么？
+    <meta name="description" content="
+除了数据驱动测试外，还有一个在自动化测试的驱动测试：关键字驱动，常用于在测试开发中
+这样的关键字驱动让我想起robot framework也是也是以关键字驱动的自动化测试
 
-测试相关的内容
+数据驱动测试
 
-学习笔记（总结、工具教程等）
-测试过程中无法在搜索引擎找到解决方法的问题
-
-
-
-😁为什么要在这里写博客？
-
-原CSDN地址：https://blog.csdn.net/weizhi3320
-现在把..." />
-    <meta name="keywords" content="" />
+测试逻辑和数据表（列表，excel表格，yaml..." />
+    <meta name="keywords" content="自动化测试" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
     <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
   </head>
@@ -86,40 +80,96 @@
         <div class="post-detail">
           <article class="post">
             <h2 class="post-title">
-              🍉 关于博客
+              关键字驱动的自动化测试
             </h2>
             <div class="post-info">
               <span>
-                01-01
+                07-22
               </span>
               <span>
-                1 min read
+                3 min read
               </span>
+              
+                <a href="https://chloeeew.github.io/tag/GW05SB-fP/" class="post-tag">
+                  # 自动化测试
+                </a>
               
             </div>
             
             <div class="post-content-wrapper">
               <div class="post-content">
-                <h2 id="博客都会写什么">🗣博客都会写什么？</h2>
+                <ul>
+<li>除了数据驱动测试外，还有一个在自动化测试的驱动测试：关键字驱动，常用于在测试开发中</li>
+<li>这样的关键字驱动让我想起robot framework也是也是以关键字驱动的自动化测试</li>
+</ul>
+<h4 id="数据驱动测试">数据驱动测试</h4>
 <ul>
-<li>测试相关的内容
+<li>测试逻辑和数据表（列表，excel表格，yaml表)存储下来</li>
+<li>数据 --&gt;  自动化测试逻辑</li>
+</ul>
+<h2 id="关键字驱动测试">关键字驱动测试</h2>
 <ul>
-<li>学习笔记（总结、工具教程等）</li>
-<li>测试过程中无法在搜索引擎找到解决方法的问题</li>
+<li>分开测试<strong>数据、动作和操作</strong>
+<ul>
+<li>动作和操作以关键字的形式表现出来，例如click、find、find_element（偏测开了，可以直接在开发好的自动化系统中选择click）</li>
+<li>动作、数据 -----&gt;自动化测试逻辑</li>
 </ul>
 </li>
 </ul>
-<h2 id="为什么要在这里写博客">😁为什么要在这里写博客？</h2>
+<pre><code>-
+  action: &quot;goto&quot;
+  params:
+    url: &quot;https://v4.ketangpai.com/User/login.html&quot;
+-
+  action: &quot;fill&quot;
+  params:
+    locator: ['name', 'account']
+    data: 'wagyu2017@163.com'
+-
+  action: &quot;fill&quot;
+  params:
+    locator: ['name', 'pass']
+    data: 'admin123456'
+-
+  action: &quot;click&quot;
+  params:
+    locator: ['xpath', &quot;//div[contains(@class, 'pt-login')]/a[@class='btn-btn']&quot;]
+-
+  name: &quot;说明操作&quot;
+  action: &quot;click&quot;
+  params:
+    locator: ['xpath', &quot;//*[text()='熟悉  课堂派']&quot;]
+</code></pre>
 <ul>
-<li>原CSDN地址：https://blog.csdn.net/weizhi3320</li>
-<li>现在把自己写的文章转移过来，方便管理了，也不需要看CSDN那么多广告了哈哈哈哈，另外一点gridea支持不同的主体风格，简约好看。加上自己申请的域名，博客归属感就更强了，以后写博客的欲望也up⬆️up⬆️了</li>
+<li>关键字文件params中的参数要和实际方法形参命名相同</li>
+<li>只需要编写一个测试用例就能够把所有操作执行</li>
 </ul>
-<h2 id="关于我联系我">🍗关于我/联系我</h2>
-<p>请各位多多执教博主这位小年轻～ 有任何需要指正的地方欢迎联系呀～</p>
+<pre><code>  from common.basepage import BasePage
+import yaml
+def test_case(get_driver):
+    &quot;&quot;&quot;运行测试用例&quot;&quot;&quot;
+    driver = get_driver
+    d = BasePage(driver)
+    # 打开关键字驱动的表，yaml
+    file = r'D:\classes\web_auto_testing\lesson12\test_add_class.yaml'
+    with open(file, encoding='utf-8') as f:
+        steps = yaml.safe_load(f)
+    for step in steps:
+       # step = {&quot;action&quot;: &quot;goto&quot;, &quot;params&quot;:...}
+       action = step['action']
+       # 要使用的操作：goto, click, fill
+       method = getattr(d, action)
+       # 要使用的参数：url,  locator
+       params = step['params']
+       # 调用 basepage 的方法
+       method(**params)
+
+# 使用关键字驱动， test_case 是通用的。
+</code></pre>
+<h4 id="关键字驱动测试的好处">关键字驱动测试的好处</h4>
 <ul>
-<li>昵称：瓜瓜/Chloe</li>
-<li>邮箱：403505960@qq.com</li>
-<li>测试工作年限：2年</li>
+<li>只需要维护表格就可以了，把动作分离出去了</li>
+<li>实现了自动化测试的无代码化，所有的用例都可以用同一个测试代码块</li>
 </ul>
 
               </div>
@@ -127,9 +177,21 @@
                 <ul class="markdownIt-TOC">
 <li>
 <ul>
-<li><a href="#%E5%8D%9A%E5%AE%A2%E9%83%BD%E4%BC%9A%E5%86%99%E4%BB%80%E4%B9%88">🗣博客都会写什么？</a></li>
-<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E5%9C%A8%E8%BF%99%E9%87%8C%E5%86%99%E5%8D%9A%E5%AE%A2">😁为什么要在这里写博客？</a></li>
-<li><a href="#%E5%85%B3%E4%BA%8E%E6%88%91%E8%81%94%E7%B3%BB%E6%88%91">🍗关于我/联系我</a></li>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E9%A9%B1%E5%8A%A8%E6%B5%8B%E8%AF%95">数据驱动测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%85%B3%E9%94%AE%E5%AD%97%E9%A9%B1%E5%8A%A8%E6%B5%8B%E8%AF%95">关键字驱动测试</a><br>
+*
+<ul>
+<li><a href="#%E5%85%B3%E9%94%AE%E5%AD%97%E9%A9%B1%E5%8A%A8%E6%B5%8B%E8%AF%95%E7%9A%84%E5%A5%BD%E5%A4%84">关键字驱动测试的好处</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -142,9 +204,9 @@
         
           <div class="next-post">
             <div class="next">下一篇</div>
-            <a href="https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/">
+            <a href="https://chloeeew.github.io/post/python-na-xie-hao-yong-de-han-shu-han-gao-jie-han-shu/">
               <h3 class="post-title">
-                🔆Gridea+Github+域名：搭建一个属于自己的博客网站
+                Python 那些好用的函数（含高阶函数）
               </h3>
             </a>
           </div>
