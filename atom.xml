@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Notes of Chloe</title>
-    <updated>2021-08-04T08:58:09.800Z</updated>
+    <updated>2021-08-06T02:06:28.876Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -11,11 +11,250 @@
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Notes of Chloe</rights>
     <entry>
+        <title type="html"><![CDATA[Python 那些好用的函数（含高阶函数）]]></title>
+        <id>https://chloeeew.github.io/post/python-na-xie-hao-yong-de-han-shu-han-gao-jie-han-shu/</id>
+        <link href="https://chloeeew.github.io/post/python-na-xie-hao-yong-de-han-shu-han-gao-jie-han-shu/">
+        </link>
+        <updated>2021-07-15T02:03:32.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="匿名函数lambda">匿名函数lambda</h1>
+<ul>
+<li>简化函数的书写形式，适用于短小的函数</li>
+</ul>
+<pre><code>def f(num):return num + 1
+# 可以简化写成lambda形式，用一个参数接收即可
+g = lambda x: x + 1
+print(g(1))
+print(f(1))
+# 运行结果都是2
+</code></pre>
+<ul>
+<li>匿名函数的格式
+<ul>
+<li>lambda 参数1,参数2: 返回值</li>
+</ul>
+</li>
+</ul>
+<h2 id="应用场景">应用场景</h2>
+<ul>
+<li>sorted函数</li>
+</ul>
+<pre><code>sorted(iterable,key=None, reverse=False)
+# key -- 主要是用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，
+指定可迭代对象中的一个元素来进行排序。
+# reverse -- 排序规则，reverse = True 降序 ， reverse = False 升序（默认）。
+</code></pre>
+<h4 id="实例">实例</h4>
+<pre><code># 不经过lambda改良
+def f(stu:dict):
+    return stu['age']
+
+def sort_test():
+    students=[
+        {'name':'feisdmx','age':85},
+        {'name':'cfeid','age':20},
+        {'name':'ppepr','age':50},
+        {'name':'aaaeef的','age':26}
+    ]
+    print(sorted(students,key=f,reverse=True))
+
+if __name__ == '__main__':
+    sort_test()
+
+# 经过lambda改良后
+def sort_test():
+    students=[
+        {'name':'feisdmx','age':85},
+        {'name':'cfeid','age':20},
+        {'name':'ppepr','age':50},
+        {'name':'aaaeef的','age':26}
+    ]
+    print(sorted(students,key=lambda stu:stu['age']))
+
+if __name__ == '__main__':
+    sort_test()        
+</code></pre>
+<h1 id="zip">zip</h1>
+<ul>
+<li>将多个可迭代对象按照索引值顺序，各自组成以元组对，函数返回值是迭代器<br>
+<img src="https://chloeeew.github.io/post-images/1628215508684.png" alt="" loading="lazy"></li>
+</ul>
+<pre><code>a = ['a','b','c']
+b = [1,2,3]
+c = dict(zip(a,b))
+------
+{'a':1,'b':2,'c':3}
+</code></pre>
+<h1 id="递归">递归</h1>
+<ul>
+<li>通过递归的方法能够实现很多数学问题，如斐波那契数列等</li>
+<li>注意：递归至少要确定最前或最后的那个常数项，接下来的按照数学规律递归即可</li>
+</ul>
+<h3 id="斐波那契数列">斐波那契数列</h3>
+<pre><code>def fib(n):
+    if n==1 or n==2:
+        return 1
+    return fib(n-1)+fib(n-2)
+
+</code></pre>
+<h3 id="实现累加功能从1加到100">实现累加功能从1加到100</h3>
+<pre><code>def demo02(x=100):
+    if x==1:   # 递归结束条件    
+        return 1    # 结束递归
+    return demo02(x-1) + x    # 递归调用
+</code></pre>
+<h3 id="一个球从100米高度自由落下每次落地后反跳回原高度的一半再落下求它在第十次落地时共经过了多少米">一个球从100米高度自由落下，每次落地后反跳回原高度的一半，再落下，求它在第十次落地时，共经过了多少米？</h3>
+<pre><code>def free_fall(times):
+    if times == 1:
+        return 100
+    return free_fall(times-1) + 100//2**(times-1) * 2
+</code></pre>
+<p><mark>使用递归的规律：把题目中的数学规律找出来，写出第n次的数学表达式，把常数项（第1项或最后1项，把数转换为常数去替换倒数第二次递归的函数返回值）找出来作为最后return的值</mark></p>
+<h1 id="闭包">闭包</h1>
+<ul>
+<li>包：一个函数包着一个函数</li>
+<li>闭： 操作函数中的局部变量的一种方法</li>
+</ul>
+<h4 id="nonlocal关键字用来在函数或其他作用域中使用外层非全局变量">nonlocal关键字用来在函数或其他作用域中使用外层(非全局)变量。</h4>
+<pre><code>def 函数()：
+    result = 0 # local变量 局部变量
+    def 函数中的函数():
+        nonlocal result
+        result += 1
+    return 函数中的函数   # 把函数返回
+
+f = 函数()  # 返回值的类型是function     
+# 那么可以通过f()去访问函数中的函数，通过f()操作后，result是没有被重置的  
+</code></pre>
+<ul>
+<li>闭包可以实现数学中的y=ax+b，装饰器是闭包的一种</li>
+</ul>
+<pre><code>def line_def(a,b):
+    def wrapper(x):
+        return a*x+b
+</code></pre>
+<p><strong>闭包是一种编程思想：闭包打破了函数结束后资源全部销毁的情况，闭包能够保存函数仲某个变量的值</strong></p>
+<h1 id="高阶函数">高阶函数</h1>
+<ul>
+<li>高阶函数是函数里面的参数是函数</li>
+</ul>
+<h2 id="map">Map</h2>
+<ul>
+<li>会根据提供的函数对指定序列做映射</li>
+<li><strong>传递的参数是函数名字（函数实现比较简单的话，可以用匿名函数代替）  和可迭代对象</strong>，将可对迭代对象的每个值传递到指定函数中，并返回迭代器<br>
+<img src="https://chloeeew.github.io/post-images/1628215520407.png" alt="" loading="lazy"></li>
+</ul>
+<pre><code>g = map(lambda x,y:{x:y},['a','b','c'],[1,2,3]) # 返回的是迭代器对象
+print(next(g)) # 按照迭代器的方式输出第一个值，得到{'a'：1}
+# 也可以通过for循环输出其他的映射值
+for i in g:
+    print(i)
+</code></pre>
+<ul>
+<li>注意，函数的参数值个数，对应着后续可迭代对象的个数（函数形参有多少个，那么可迭代对象就要有多少个）</li>
+</ul>
+<pre><code>map(fuc(T1,T2,T3,T4),list1,list2,list3,list4)
+</code></pre>
+<h2 id="reduce">reduce</h2>
+<ul>
+<li>reduce方法接收一个function作为累积器，sequence中的每个值（从左到右）开始缩减，最终计算为一个值</li>
+</ul>
+<pre><code>from functools import reduce
+</code></pre>
+<h4 id="参数">参数</h4>
+<pre><code>reduce(function, sequence)
+</code></pre>
+<h4 id="实例-2">实例</h4>
+<pre><code>print(reduce(lambda x,y:x+y,range(1,101))) # 累加 从1加到1000
+print(reduce(lambda x,y:x*y,range(1,5)))  # 累乘 1*2*3*4=24 
+</code></pre>
+<h2 id="filter">filter</h2>
+<ul>
+<li>可以按照函数名代表功能，过滤出给的可迭代对象，并返回一个迭代器</li>
+</ul>
+<pre><code>f = filter(lambda x:x&gt;5,[1,2,3,4,5,6,7])
+f_list = [i for i in f]
+print(f_list)
+</code></pre>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Python数据类型拓展随记]]></title>
+        <id>https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/</id>
+        <link href="https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/">
+        </link>
+        <updated>2021-06-19T07:34:08.000Z</updated>
+        <content type="html"><![CDATA[<h1 id="1-命名元组">1、命名元组</h1>
+<ul>
+<li>取元祖内部的元素都是同下标索引来进行取值的，比如一个元祖中包含了三个元素tu=('小明‘，18，’男‘)分别代表：姓名、年龄、性别<br>
+通过下标取值不够人性化。</li>
+</ul>
+<h5 id="方法一可以做到类似像-字典一样取值">方法一：可以做到类似像 字典一样取值</h5>
+<pre><code>tu=('小明‘，18，’男‘)
+NAME=0
+tu[NAME] # 获取姓名
+</code></pre>
+<h5 id="方法二我们可以用命名元组">方法二：我们可以用命名元组</h5>
+<ul>
+<li>collections模块中的namedtuple函数</li>
+</ul>
+<pre><code># namedtuple : 接收两个参数，第一个创建的类型名称，第二个是列表
+from collections import namedtuple
+Student = namedtuple('Student',['name','age','gender'])
+s = Student('小明',18,'男')
+print(s.name)
+&gt;&gt;&gt; 小明
+</code></pre>
+<h1 id="2-推导式">2、推导式</h1>
+<h2 id="列表推导式">列表推导式</h2>
+<ul>
+<li>需求：如何快速生成一个[&quot;data0&quot;,&quot;data1&quot;……,&quot;data99&quot;]的列表</li>
+<li>[ 迭代中的每个元素（可二次加工）      for语句       条件判断（可有可无]</li>
+<li>先写for循环语句，语句前面是结果，语句后面可以修饰迭代值（判断）</li>
+<li></li>
+</ul>
+<pre><code>print([f&quot;data{i}&quot; for i in range(0,101) if i%2 == 0])
+
+# 相当于
+s = []
+for i in range(0,101):
+    if i % 2 == 0:
+        s.append(&quot;data&quot; + str(i))
+print(s)        
+</code></pre>
+<h2 id="字典推导式">字典推导式</h2>
+<ul>
+<li>在上面我们通过列表推导式可以快速生成列表，同样也可以快速生成</li>
+</ul>
+<pre><code># cookie中获取的字符串进行分割，形成对应字典
+cookie_str = 'BSJIJ=fjiijijij;fjiewjfiw=nn922;jijiwf=0933;jiejfwo=wefewfv'
+
+print({item.split('=')[0]:item.split('=')[1] for item in cookie_str.split(';')})
+</code></pre>
+<ul>
+<li>推导式的注意事项：使用推导式是为了让代码简洁，但不代表代码越少就越好，推导式过于复杂会影响代码的可读性</li>
+</ul>
+<h2 id="生成器表达式">生成器表达式</h2>
+<ul>
+<li>以上在中括号使用推导式是列表推导式，大括号中使用推导式是字典推导式</li>
+<li>那么小括号使用的推导式是什么？</li>
+</ul>
+<pre><code>gen_ = (item for item in range(0,100))
+print(gen_)
+# 打印的是一个生成器
+&gt;&gt;&gt;  &lt;generator object &lt;genexpr&gt; at 0x0000019C0EA7D820&gt;
+</code></pre>
+<ul>
+<li>在小括号中使用推导式它有一个特殊的名字是生成器表达式</li>
+<li>generator object，就是一个生成器对象</li>
+</ul>
+]]></content>
+    </entry>
+    <entry>
         <title type="html"><![CDATA[top和iftop看资源占用以及网络流量情况]]></title>
         <id>https://chloeeew.github.io/post/top-he-iftop-kan-zi-yuan-zhan-yong-yi-ji-wang-luo-liu-liang-qing-kuang/</id>
         <link href="https://chloeeew.github.io/post/top-he-iftop-kan-zi-yuan-zhan-yong-yi-ji-wang-luo-liu-liang-qing-kuang/">
         </link>
-        <updated>2021-08-04T08:55:57.000Z</updated>
+        <updated>2021-05-22T08:55:57.000Z</updated>
         <content type="html"><![CDATA[<h1 id="top命令">top命令</h1>
 <ul>
 <li><em>top常用的性能分析工具，实时显示系统中各进程的资源占用状况，用q退出</em></li>
@@ -109,7 +348,7 @@
         <id>https://chloeeew.github.io/post/python-die-dai-qi-he-sheng-cheng-qi-sui-ji/</id>
         <link href="https://chloeeew.github.io/post/python-die-dai-qi-he-sheng-cheng-qi-sui-ji/">
         </link>
-        <updated>2021-08-03T07:34:44.000Z</updated>
+        <updated>2021-05-22T07:34:44.000Z</updated>
         <content type="html"><![CDATA[<h1 id="迭代器">迭代器</h1>
 <h2 id="迭代协议">迭代协议</h2>
 <ul>
@@ -315,179 +554,6 @@ g.close()
 ]]></content>
     </entry>
     <entry>
-        <title type="html"><![CDATA[Python数据类型拓展随记]]></title>
-        <id>https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/</id>
-        <link href="https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/">
-        </link>
-        <updated>2021-08-03T07:34:08.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="1-命名元组">1、命名元组</h1>
-<ul>
-<li>取元祖内部的元素都是同下标索引来进行取值的，比如一个元祖中包含了三个元素tu=('小明‘，18，’男‘)分别代表：姓名、年龄、性别<br>
-通过下标取值不够人性化。</li>
-</ul>
-<h5 id="方法一可以做到类似像-字典一样取值">方法一：可以做到类似像 字典一样取值</h5>
-<pre><code>tu=('小明‘，18，’男‘)
-NAME=0
-tu[NAME] # 获取姓名
-</code></pre>
-<h5 id="方法二我们可以用命名元组">方法二：我们可以用命名元组</h5>
-<ul>
-<li>collections模块中的namedtuple函数</li>
-</ul>
-<pre><code># namedtuple : 接收两个参数，第一个创建的类型名称，第二个是列表
-from collections import namedtuple
-Student = namedtuple('Student',['name','age','gender'])
-s = Student('小明',18,'男')
-print(s.name)
-&gt;&gt;&gt; 小明
-</code></pre>
-<h1 id="2-推导式">2、推导式</h1>
-<h2 id="列表推导式">列表推导式</h2>
-<ul>
-<li>需求：如何快速生成一个[&quot;data0&quot;,&quot;data1&quot;……,&quot;data99&quot;]的列表</li>
-<li>[ 迭代中的每个元素（可二次加工）      for语句       条件判断（可有可无]</li>
-<li>先写for循环语句，语句前面是结果，语句后面可以修饰迭代值（判断）</li>
-<li></li>
-</ul>
-<pre><code>print([f&quot;data{i}&quot; for i in range(0,101) if i%2 == 0])
-
-# 相当于
-s = []
-for i in range(0,101):
-    if i % 2 == 0:
-        s.append(&quot;data&quot; + str(i))
-print(s)        
-</code></pre>
-<h2 id="字典推导式">字典推导式</h2>
-<ul>
-<li>在上面我们通过列表推导式可以快速生成列表，同样也可以快速生成</li>
-</ul>
-<pre><code># cookie中获取的字符串进行分割，形成对应字典
-cookie_str = 'BSJIJ=fjiijijij;fjiewjfiw=nn922;jijiwf=0933;jiejfwo=wefewfv'
-
-print({item.split('=')[0]:item.split('=')[1] for item in cookie_str.split(';')})
-</code></pre>
-<ul>
-<li>推导式的注意事项：使用推导式是为了让代码简洁，但不代表代码越少就越好，推导式过于复杂会影响代码的可读性</li>
-</ul>
-<h2 id="生成器表达式">生成器表达式</h2>
-<ul>
-<li>以上在中括号使用推导式是列表推导式，大括号中使用推导式是字典推导式</li>
-<li>那么小括号使用的推导式是什么？</li>
-</ul>
-<pre><code>gen_ = (item for item in range(0,100))
-print(gen_)
-# 打印的是一个生成器
-&gt;&gt;&gt;  &lt;generator object &lt;genexpr&gt; at 0x0000019C0EA7D820&gt;
-</code></pre>
-<ul>
-<li>在小括号中使用推导式它有一个特殊的名字是生成器表达式</li>
-<li>generator object，就是一个生成器对象</li>
-</ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[🔆Gridea+Github+域名：搭建一个属于自己的博客网站]]></title>
-        <id>https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/</id>
-        <link href="https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/">
-        </link>
-        <updated>2021-08-03T06:07:43.000Z</updated>
-        <content type="html"><![CDATA[<p><em>在搜索引擎学习逛博客或者搜问题的时候，发现很多人都不在用广告满天飞的某DN，也不喜欢用排版难看的某圆，而是用自己的域名搭了属于自己的博客，这让我非常心动，前些日子也自己按照一些“教程”搭了一个，发现里面的小坑挺多的，而这些教程都没有清晰说明，今天趁稍微有空，写一下</em></p>
-<h1 id="一-gridea生成静态网页">一、Gridea生成静态网页</h1>
-<ul>
-<li>它可以让你不需要写前端就能生成一个漂亮的带样式的静态网页，能够跟github博客集成到一起，除了Gridea还有其他的（抱歉又忘了名字），但需要自己去搭服务，搞数据库，这流程太漫长了，所以综合考虑Gridea是最方便简单的<br>
-<img src="https://chloeeew.github.io/post-images/1627974530187.png" alt="" loading="lazy"></li>
-</ul>
-<h3 id="1-下载客户端待用">1、下载客户端待用</h3>
-<ul>
-<li>网址：https://gridea.dev/</li>
-<li>根据自己的操作系统下载客户端即可<br>
-<img src="https://chloeeew.github.io/post-images/1627974495377.png" alt="" loading="lazy"></li>
-</ul>
-<h1 id="二-github创建仓库并授权给gridea">二、Github创建仓库并授权给Gridea</h1>
-<h3 id="1-仓库命名">1、仓库命名</h3>
-<ul>
-<li>Repository name的命名规则
-<ul>
-<li>创建新的仓库后，命名为用户名.github.io</li>
-</ul>
-</li>
-</ul>
-<pre><code>username.github.io
-</code></pre>
-<h3 id="2-github给gridea">2、Github给Gridea</h3>
-<ul>
-<li>github 中 右上角Setting进入设置</li>
-<li>菜单栏中找到Developer settings</li>
-<li>选择Generate new token</li>
-<li>新token命名随意，但需要把下方授权内容中repo所有项勾选<br>
-生成了token之后一定要马上把生成码复制起来（忘了的话，删了重新创建token就可以了）<br>
-<img src="https://chloeeew.github.io/post-images/1627974556144.png" alt="" loading="lazy"></li>
-</ul>
-<h3 id="3-token密钥给到gridea">3、token密钥给到Gridea</h3>
-<ul>
-<li>如图，填写后保存并且按检测远程连接</li>
-<li>连接成功后，点击左下角的同步<br>
-<img src="https://chloeeew.github.io/post-images/1627974575803.png" alt="" loading="lazy"></li>
-</ul>
-<h3 id="三-腾讯云购买域名">三、腾讯云购买域名</h3>
-<ul>
-<li>https://dnspod.cloud.tencent.com/
-<ul>
-<li>只要名字够特别，域名10年都不贵</li>
-</ul>
-</li>
-</ul>
-<h4 id="注意事项">注意事项</h4>
-<ol>
-<li>购买前要在腾讯云实名认证</li>
-</ol>
-<h3 id="四-腾讯云dns服务器添加记录">四、腾讯云DNS服务器添加记录</h3>
-<ul>
-<li>右上角控制台-&gt; DNS解析DNS pod -&gt;域名解析列表-&gt;点击刚刚购买的域名-&gt;添加记录</li>
-</ul>
-<h4 id="注意事项-2">注意事项</h4>
-<p>1、主机记录和记录类型以及记录值要按照图的顺序一一填写，切勿错乱<br>
-2、第二行IPv4要自行在cmd上ping一下（username是自己的用户名），ping通后能得到对应的服务器ip地址<br>
-3、配置好记录后，DNS解析需要一定时间</p>
-<pre><code>ping username.github.io
-</code></pre>
-<figure data-type="image" tabindex="1"><img src="https://chloeeew.github.io/post-images/1627974621739.png" alt="" loading="lazy"></figure>
-<h3 id="五-将域名填写到gridea-远程-cname中">五、将域名填写到Gridea-&gt;远程-&gt;Cname中</h3>
-<ul>
-<li>如第二步第三小节图，填写后重新按一下保存+检测远程连接+同步<br>
-<img src="https://chloeeew.github.io/post-images/1627974575803.png" alt="" loading="lazy"></li>
-</ul>
-<h3 id="六-在github中为博客加上ssl">六、在github中为博客加上SSL</h3>
-<ol>
-<li>回到github的io项目中，选择项目setting</li>
-<li>选择菜单中的Pages中拉到最下方，勾选ENFORCE HTTPS<br>
-<img src="https://chloeeew.github.io/post-images/1627974629586.png" alt="" loading="lazy"></li>
-</ol>
-<h3 id="七-最后的检测域名现状">七、最后的检测域名现状</h3>
-<ul>
-<li>https://zijian.aliyun.com</li>
-<li>填写自己的域名，如果能满足以下检查点，说明已经搭建好了</li>
-</ul>
-<h4 id="检查点">检查点</h4>
-<ol>
-<li>DNS检查：域名递归解析正常</li>
-<li>网站检查：<br>
-3. Ping检查正常<br>
-4. 网站状态码正常<br>
-5. 网站不在工信部黑名单<br>
-5. <strong>网站服务器在国外，所以不需要备案</strong></li>
-<li>域名检查：域名状态和有效期正常</li>
-</ol>
-<h3 id="最后最后再说一遍的注意事项">最后最后再说一遍的注意事项</h3>
-<ol>
-<li>DNS记录不能把CNAME和@乱序了！！</li>
-<li>一开始配置好的内容，需要一点时间让它去解析，切勿急躁</li>
-<li>如果按照这个步骤还有任何问题，请联系～</li>
-</ol>
-]]></content>
-    </entry>
-    <entry>
         <title type="html"><![CDATA[Postman完成RSA加密并使用加密所得鉴权]]></title>
         <id>https://chloeeew.github.io/post/postman-wan-cheng-rsa-jia-mi-bing-shi-yong-jia-mi-suo-de-jian-quan/</id>
         <link href="https://chloeeew.github.io/post/postman-wan-cheng-rsa-jia-mi-bing-shi-yong-jia-mi-suo-de-jian-quan/">
@@ -620,6 +686,107 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 <li>邮箱：403505960@qq.com</li>
 <li>测试工作年限：2年</li>
 </ul>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[🔆Gridea+Github+域名：搭建一个属于自己的博客网站]]></title>
+        <id>https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/</id>
+        <link href="https://chloeeew.github.io/post/grideagithubyu-ming-da-jian-yi-ge-shu-yu-zi-ji-de-bo-ke-wang-zhan/">
+        </link>
+        <updated>2020-08-29T06:07:43.000Z</updated>
+        <content type="html"><![CDATA[<p><em>在搜索引擎学习逛博客或者搜问题的时候，发现很多人都不在用广告满天飞的某DN，也不喜欢用排版难看的某圆，而是用自己的域名搭了属于自己的博客，这让我非常心动，前些日子也自己按照一些“教程”搭了一个，发现里面的小坑挺多的，而这些教程都没有清晰说明，今天趁稍微有空，写一下</em></p>
+<h1 id="一-gridea生成静态网页">一、Gridea生成静态网页</h1>
+<ul>
+<li>它可以让你不需要写前端就能生成一个漂亮的带样式的静态网页，能够跟github博客集成到一起，除了Gridea还有其他的（抱歉又忘了名字），但需要自己去搭服务，搞数据库，这流程太漫长了，所以综合考虑Gridea是最方便简单的<br>
+<img src="https://chloeeew.github.io/post-images/1627974530187.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="1-下载客户端待用">1、下载客户端待用</h3>
+<ul>
+<li>网址：https://gridea.dev/</li>
+<li>根据自己的操作系统下载客户端即可<br>
+<img src="https://chloeeew.github.io/post-images/1627974495377.png" alt="" loading="lazy"></li>
+</ul>
+<h1 id="二-github创建仓库并授权给gridea">二、Github创建仓库并授权给Gridea</h1>
+<h3 id="1-仓库命名">1、仓库命名</h3>
+<ul>
+<li>Repository name的命名规则
+<ul>
+<li>创建新的仓库后，命名为用户名.github.io</li>
+</ul>
+</li>
+</ul>
+<pre><code>username.github.io
+</code></pre>
+<h3 id="2-github给gridea">2、Github给Gridea</h3>
+<ul>
+<li>github 中 右上角Setting进入设置</li>
+<li>菜单栏中找到Developer settings</li>
+<li>选择Generate new token</li>
+<li>新token命名随意，但需要把下方授权内容中repo所有项勾选<br>
+生成了token之后一定要马上把生成码复制起来（忘了的话，删了重新创建token就可以了）<br>
+<img src="https://chloeeew.github.io/post-images/1627974556144.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="3-token密钥给到gridea">3、token密钥给到Gridea</h3>
+<ul>
+<li>如图，填写后保存并且按检测远程连接</li>
+<li>连接成功后，点击左下角的同步<br>
+<img src="https://chloeeew.github.io/post-images/1627974575803.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="三-腾讯云购买域名">三、腾讯云购买域名</h3>
+<ul>
+<li>https://dnspod.cloud.tencent.com/
+<ul>
+<li>只要名字够特别，域名10年都不贵</li>
+</ul>
+</li>
+</ul>
+<h4 id="注意事项">注意事项</h4>
+<ol>
+<li>购买前要在腾讯云实名认证</li>
+</ol>
+<h3 id="四-腾讯云dns服务器添加记录">四、腾讯云DNS服务器添加记录</h3>
+<ul>
+<li>右上角控制台-&gt; DNS解析DNS pod -&gt;域名解析列表-&gt;点击刚刚购买的域名-&gt;添加记录</li>
+</ul>
+<h4 id="注意事项-2">注意事项</h4>
+<p>1、主机记录和记录类型以及记录值要按照图的顺序一一填写，切勿错乱<br>
+2、第二行IPv4要自行在cmd上ping一下（username是自己的用户名），ping通后能得到对应的服务器ip地址<br>
+3、配置好记录后，DNS解析需要一定时间</p>
+<pre><code>ping username.github.io
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://chloeeew.github.io/post-images/1627974621739.png" alt="" loading="lazy"></figure>
+<h3 id="五-将域名填写到gridea-远程-cname中">五、将域名填写到Gridea-&gt;远程-&gt;Cname中</h3>
+<ul>
+<li>如第二步第三小节图，填写后重新按一下保存+检测远程连接+同步<br>
+<img src="https://chloeeew.github.io/post-images/1627974575803.png" alt="" loading="lazy"></li>
+</ul>
+<h3 id="六-在github中为博客加上ssl">六、在github中为博客加上SSL</h3>
+<ol>
+<li>回到github的io项目中，选择项目setting</li>
+<li>选择菜单中的Pages中拉到最下方，勾选ENFORCE HTTPS<br>
+<img src="https://chloeeew.github.io/post-images/1627974629586.png" alt="" loading="lazy"></li>
+</ol>
+<h3 id="七-最后的检测域名现状">七、最后的检测域名现状</h3>
+<ul>
+<li>https://zijian.aliyun.com</li>
+<li>填写自己的域名，如果能满足以下检查点，说明已经搭建好了</li>
+</ul>
+<h4 id="检查点">检查点</h4>
+<ol>
+<li>DNS检查：域名递归解析正常</li>
+<li>网站检查：<br>
+3. Ping检查正常<br>
+4. 网站状态码正常<br>
+5. 网站不在工信部黑名单<br>
+5. <strong>网站服务器在国外，所以不需要备案</strong></li>
+<li>域名检查：域名状态和有效期正常</li>
+</ol>
+<h3 id="最后最后再说一遍的注意事项">最后最后再说一遍的注意事项</h3>
+<ol>
+<li>DNS记录不能把CNAME和@乱序了！！</li>
+<li>一开始配置好的内容，需要一点时间让它去解析，切勿急躁</li>
+<li>如果按照这个步骤还有任何问题，请联系～</li>
+</ol>
 ]]></content>
     </entry>
     <entry>
@@ -900,209 +1067,6 @@ play game:  4
 <li>CSDN博客亦有相同内容：</li>
 <li>https://blog.csdn.net/weizhi3320/article/details/118575612</li>
 </ul>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Linux 防火墙 iptable命令详解]]></title>
-        <id>https://chloeeew.github.io/post/linux-fang-huo-qiang-iptable-ming-ling-xiang-jie/</id>
-        <link href="https://chloeeew.github.io/post/linux-fang-huo-qiang-iptable-ming-ling-xiang-jie/">
-        </link>
-        <updated>2020-03-29T13:10:11.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="一-iptables介绍">一、iptables介绍</h1>
-<ul>
-<li>iptables是Linux中对网络数据包进行处理的一个功能组件，就相当于防火墙，可以对经过的数据包进行处理，例如：数据包过滤、数据包转发等等，一般例如Ubuntu等Linux系统是默认自带启动的。</li>
-</ul>
-<h1 id="二-iptables结构">二、iptables结构</h1>
-<ul>
-<li>iptables其实是一堆规则，防火墙根据iptables里的规则，对收到的网络数据包进行处理。iptables里的数据组织结构分为：表、链、规则。</li>
-</ul>
-<h2 id="表tables">表（tables）##</h2>
-<ul>
-<li>表提供特定的功能，iptables里面有4个表： filter表、nat表、mangle表和raw表，分别用于实现包过滤、网络地址转换、包重构和数据追踪处理。<br>
-每个表里包含多个链。</li>
-</ul>
-<h2 id="链chains">链（chains）##</h2>
-<p>链（chains）是数据包传播的路径，每一条链其实就是众多规则中的一个检查清单，每一条链中可以有一 条或数条规则。当一个数据包到达一个链时，iptables就会从链中第一条规则开始检查，看该数据包是否满足规则所定义的条件。如果满足，系统就会根据 该条规则所定义的方法处理该数据包；否则iptables将继续检查下一条规则，如果该数据包不符合链中任一条规则，iptables就会根据该链预先定 义的默认策略来处理数据包。<br>
-<img src="https://chloeeew.github.io/post-images/1627962127333.png" alt="" loading="lazy"></p>
-<h2 id="表链结构">表链结构</h2>
-<p>1.filter表——三个链：INPUT、FORWARD、OUTPUT<br>
-作用：过滤数据包 内核模块：iptables_filter.</p>
-<p>2.Nat表——三个链：PREROUTING、POSTROUTING、OUTPUT<br>
-作用：用于网络地址转换（IP、端口） 内核模块：iptable_nat</p>
-<p>3.Mangle表——五个链：PREROUTING、POSTROUTING、INPUT、OUTPUT、FORWARD<br>
-作用：修改数据包的服务类型、TTL、并且可以配置路由实现QOS内核模块</p>
-<p>4.Raw表——两个链：OUTPUT、PREROUTING<br>
-作用：决定数据包是否被状态跟踪机制处理</p>
-<h2 id="数据包流向">数据包流向</h2>
-<p>前面介绍了iptables的组织结构，下面一张图介绍了一个数据包如何依次穿过iptables的各个链和表的。<br>
-<img src="https://chloeeew.github.io/post-images/1627962162521.png" alt="" loading="lazy"></p>
-<h3 id="基本步骤如下">基本步骤如下：</h3>
-<p>数据包到达网络接口，比如 eth0。<br>
-进入 raw 表的 PREROUTING 链，这个链的作用是赶在连接跟踪之前处理数据包。<br>
-如果进行了连接跟踪，在此处理。<br>
-进入 mangle 表的 PREROUTING 链，在此可以修改数据包，比如 TOS 等。<br>
-进入 nat 表的 PREROUTING 链，可以在此做DNAT，但不要做过滤。<br>
-决定路由，看是交给本地主机还是转发给其它主机。</p>
-<h3 id="后面将分为2种情况">后面将分为2种情况：</h3>
-<p>数据包发送给本地主机，交由本地主机上层应用处理；<br>
-将数据包转发给其他主机来处理。</p>
-<p><strong>第一种情况</strong>，数据包要转发给其它主机：</p>
-<ol>
-<li>进入 mangle 表的 FORWARD 链，这里也比较特殊，这是在第一次路由决定之后，在进行最后的路由决定之前，我们仍然可以对数据包进行某些修改。</li>
-<li>进入 filter 表的 FORWARD 链，在这里我们可以对所有转发的数据包进行过滤。需要注意的是：经过这里的数据包是转发的，方向是双向的。</li>
-<li>进入 mangle 表的 POSTROUTING 链，到这里已经做完了所有的路由决定，但数据包仍然在本地主机，我们还可以进行某些修改。</li>
-<li>进入 nat 表的 POSTROUTING 链，在这里一般都是用来做SNAT ，不要在这里进行过滤。</li>
-<li>进入出去的网络接口。完毕。</li>
-</ol>
-<p><strong>第二种情况</strong>，数据包就是发给本地主机的，那么它会依次穿过：<br>
-7. 进入 mangle 表的 INPUT 链，这里是在路由之后，交由本地主机之前，我们也可以进行一些相应的修改。<br>
-8. 进入 filter 表的 INPUT 链，在这里我们可以对流入的所有数据包进行过滤，无论它来自哪个网络接口。<br>
-9. 交给本地主机的应用程序进行处理。<br>
-10. 处理完毕后进行路由决定，看该往那里发出。<br>
-11. 进入 raw 表的 OUTPUT 链，这里是在连接跟踪处理本地的数据包之前。<br>
-12. 连接跟踪对本地的数据包进行处理。<br>
-13. 进入 mangle 表的 OUTPUT 链，在这里我们可以修改数据包，但不要做过滤。<br>
-14. 进入 nat 表的 OUTPUT 链，可以对防火墙自己发出的数据做 NAT 。<br>
-15. 再次进行路由决定。<br>
-16. 进入 filter 表的 OUTPUT 链，可以对本地出去的数据包进行过滤。<br>
-17. 进入 mangle 表的 POSTROUTING 链，同上一种情况的第9步。注意，这里不光对经过防火墙的数据包进行处理，还对防火墙自己产生的数据包进行处理。<br>
-18. 进入 nat 表的 POSTROUTING 链，同上一种情况的第10步。<br>
-19. 进入出去的网络接口。完毕<br>
-20.</p>
-<h2 id="三-iptables">三、iptables</h2>
-<h3 id="iptables的基本语法格式">iptables的基本语法格式</h3>
-<pre><code>- iptables [-t 表名] 命令选项 ［链名］ ［条件匹配］ ［-j 目标动作或跳转
-- 说明：表名、链名用于指定 iptables命令所操作的表和链，命令选项用于指定管理iptables规则的方式（比如：插入、增加、删除、查看等；条件匹配用于指定对符合什么样 条件的数据包进行处理；目标动作或跳转用于指定数据包的处理方式（比如允许通过、拒绝、丢弃、跳转（Jump）给其它链处理。
-</code></pre>
-<h3 id="iptables命令的管理控制选项">iptables命令的管理控制选项</h3>
-<ol>
-<li>-A 在指定链的末尾添加（append）一条新的规则</li>
-<li>-D 删除（delete）指定链中的某一条规则，可以按规则序号和内容删除</li>
-<li>-I 在指定链中插入（insert）一条新的规则，默认在第一行添加</li>
-<li>-R 修改、替换（replace）指定链中的某一条规则，可以按规则序号和内容替换</li>
-<li>-L 列出（list）指定链中所有的规则进行查看</li>
-<li>-E 重命名用户定义的链，不改变链本身</li>
-<li>-F 清空（flush）</li>
-<li>-N 新建（new-chain）一条用户自己定义的规则链</li>
-<li>-X 删除指定表中用户自定义的规则链（delete-chain）</li>
-<li>-P 设置指定链的默认策略（policy）</li>
-<li>-Z 将所有表的所有链的字节和数据包计数器清零</li>
-<li>-n 使用数字形式（numeric）显示输出结果</li>
-<li>-v 查看规则表详细信息（verbose）的信息</li>
-<li>-V 查看版本(version)</li>
-<li>-h 获取帮助（help)</li>
-</ol>
-<h3 id="防火墙处理数据包的四种方式">防火墙处理数据包的四种方式</h3>
-<ol>
-<li>ACCEPT 允许数据包通过</li>
-<li>DROP 直接丢弃数据包，不给任何回应信息</li>
-<li>REJECT 拒绝数据包通过，必要时会给数据发送端一个响应的信息。</li>
-<li>LOG 用于针对特定的数据包打log，在/var/log/messages文件中记录日志信息，然后将数据包传递给下一条规则</li>
-<li>TRACE这个只能针对raw中的table，是用来对数据进行追踪的，用于debug.</li>
-</ol>
-<h3 id="iptables防火墙规则的保存与恢复">iptables防火墙规则的保存与恢复</h3>
-<p>iptables-save把规则保存到文件中，再由目录rc.d下的脚本（/etc/rc.d/init.d/iptables）自动装载<br>
-使用命令</p>
-<pre><code>iptables-save
-</code></pre>
-<p>来保存规则。一般用</p>
-<pre><code>iptables-save &gt; /etc/sysconfig/iptables
-</code></pre>
-<p>生成保存规则的文件 /etc/sysconfig/iptables，也可以用:</p>
-<pre><code>service iptables save
-</code></pre>
-<h2 id="iptables防火墙常用的策略">iptables防火墙常用的策略</h2>
-<p>拒绝进入防火墙的所有ICMP协议数据包</p>
-<pre><code>iptables -I INPUT -p icmp -j REJECT
-</code></pre>
-<p>允许防火墙转发除ICMP协议以外的所有数据包</p>
-<pre><code>iptables -A FORWARD -p ! icmp -j ACCEPT
-</code></pre>
-<p>说明：使用“！”可以将条件取反。</p>
-<p>允许本机开放从TCP端口20-1024提供的应用服务。</p>
-<pre><code>iptables -A INPUT -p tcp --dport 20:1024 -j ACCEPT 
-iptables -A OUTPUT -p tcp --sport 20:1024 -j ACCEPT
-</code></pre>
-<p>从一台主机转发到另一台主机<br>
-注意转发首先需要按照前面的开启转发设置</p>
-<p>(相同端口)<br>
-从192.168.0.132:21521(新端口)访问192.168.0.211:1521端口</p>
-<pre><code>iptables -t nat -I PREROUTING -p tcp --dport 1521 -j DNAT --to 192.168.0.211
-iptables -t nat -I POSTROUTING -p tcp --dport 1521 -j MASQUERADE
-</code></pre>
-<p>（不同端口）<br>
-不同端口转发(192.168.0.132上开通21521端口访问</p>
-<pre><code>iptables -t nat -A PREROUTING -p tcp -m tcp --dport 21521 -j DNAT --to-destination 192.168.0.211:1521
-iptables -t nat -A POSTROUTING -s 192.168.0.0/16 -d 192.168.0.211 -p tcp -m tcp --dport 1521 -j SNAT --to-source 192.168.0.132
-</code></pre>
-<p>以上两条等价配置(更简单[指定网卡]):</p>
-<pre><code>iptables -t nat -A PREROUTING -p tcp -i eth0 --dport 31521 -j DNAT --to 192.168.0.211:1521
-iptables -t nat -A POSTROUTING -j MASQUERADE
-</code></pre>
-<p>(用iptables做本机端口转发)</p>
-<pre><code>iptables -t nat -A PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 8080
-</code></pre>
-<p>其他一些指令可以继续查看：<br>
-http://www.cnblogs.com/metoy/p/4320813.html</p>
-<p>我要用到的是将本地qemu仿真的一个虚拟机中的IP:PORT给映射到主机的端口上来对外服务：</p>
-<p>qemu仿真系统IP为192.168.0.1，仿真系统与主机的桥接的网卡上，主机的ip为192.168.0.2，主机对外ip为172.18.236.82，将虚拟机中的80端口映射到主机的8080端口：</p>
-<pre><code>sudo iptables -t nat -A PREROUTING -d 172.18.236.82 -p tcp --dport 8081 -j DNAT --to-destination 192.168.0.1:80
-sudo iptables -t nat -A POSTROUTING -d 192.168.0.1 -p tcp --dport 80 -j SNAT --to 192.168.0.2
-</code></pre>
-<h2 id="四-python对iptables的操作包">四、python对iptables的操作包</h2>
-<p>python中有对iptables的操作包: iptc<br>
-参考主页：<br>
-https://github.com/ldx/python-iptables</p>
-<p>Linux上安装：<br>
-针对python的：</p>
-<pre><code>pip install --upgrade python-iptables
-</code></pre>
-<p>针对python3的：</p>
-<pre><code>pip3 install --upgrade python-iptables
-</code></pre>
-<p>在python文件中导入：</p>
-<pre><code>import iptc
-</code></pre>
-<p>官网里面有对该包的介绍和很多例子，但没有一个所有指令的完整归纳，有些指令参数不知道在iptc包中用什么，后面总结了在加在这~</p>
-<h2 id="五-iptables的debug">五、 iptables的debug</h2>
-<p>在对问题进行处理时，我们肯定会遇到debug的需求，针对iptables的debug主要是通过看Log.</p>
-<h3 id="51-打开iptables的log日志">5.1. 打开iptables的log日志</h3>
-<p>首先我们需要打开iptables的log记录功能，让系统将相应的log输出。<br>
-默认iptables的日志是输出到/var/log/message文件中，当然对没有开启log功能的时候，不会有任何log输出。<br>
-为了便于debug，我们将iptables的log输出到/var/log/iptables.log文件。<br>
-开启log输出针对不同系统会不同，主要是以下2种：</p>
-<h4 id="511-针对用syslog的系统">5.1.1 针对用syslog的系统</h4>
-<p>如果系统存在以下文件： /etc/syslog.conf， 我们在/etc/syslog.conf中添加以下几行：</p>
-<p>kern.warning /var/log/iptables.log<br>
-kern.debug /var/log/iptables.log<br>
-然后重启syslog:<br>
-sudo service syslog restart</p>
-<h4 id="512-针对用rsyslog的系统">5.1.2 针对用rsyslog的系统</h4>
-<p>如果系统存在以下文件： /etc/rsyslog.conf， 我们在/etc/syslog.conf中添加以下几行：</p>
-<p>kern.warning /var/log/iptables.log<br>
-kern.debug /var/log/iptables.log<br>
-然后重启syslog:<br>
-sudo service rsyslog restart</p>
-<h3 id="52-针对需要查看的数据添加iptables规则使其打印log">5.2 针对需要查看的数据，添加iptables规则使其打印log</h3>
-<p>开启log输出后，我们需要添加相应的iptables规则，使其打印我们需要的log信息，主要有2种方法：</p>
-<h3 id="521-trace方法">5.2.1 TRACE方法</h3>
-<p>在前面的数据包流向图中，raw表中的链是用来对数据包进行追踪的，我们可以在其链中添加TRACE操作规则，使其对相应的流量进行追踪，例如下面的例子将追踪进入的目标地址为192.168.0.211的数据包。</p>
-<pre><code>sudo iptables -t raw -I PREROUTING -d 192.168.0.211 -j TRACE
-</code></pre>
-<h4 id="522-log方法">5.2.2 LOG方法</h4>
-<p>如果想在指定的一个表的一个链中加入一条规则，当在这个链中遇到特定的数据包，则记录一条log信息。例如下面的指令将使得在nat的PREROUTING链中遇到目标地址为100.69.73.114时，则记录一条log。</p>
-<pre><code>sudo iptables -t nat -I PREROUTING  -d 100.69.73.114 -j LOG --log-level 4
-5.3 查看log信息
-sudo tail -f /var/log/iptables.log
-</code></pre>
-<h3 id="须知">须知</h3>
-<p>博主CSDN中有相同文章：<br>
-https://blog.csdn.net/weizhi3320/article/details/105186350</p>
-<p>原文参考处：<br>
-https://www.cnblogs.com/qwertwwwe/p/9452370.html</p>
-<h2 id="参考并转载于以下链接httpwwwcnblogscommetoyp4320813htmlhttpwwwha97com4093html">参考并转载于以下链接：<br>
-http://www.cnblogs.com/metoy/p/4320813.html<br>
-http://www.ha97.com/4093.html</h2>
 ]]></content>
     </entry>
 </feed>

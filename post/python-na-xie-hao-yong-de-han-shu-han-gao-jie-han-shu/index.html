@@ -1,0 +1,369 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Python 那些好用的函数（含高阶函数） | Notes of Chloe</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1628215584840">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="Python 那些好用的函数（含高阶函数） | Notes of Chloe - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="匿名函数lambda
+
+简化函数的书写形式，适用于短小的函数
+
+def f(num):return num + 1
+# 可以简化写成lambda形式，用一个参数接收即可
+g = lambda x: x + 1
+print(g(1))
+pri..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1628215584840" alt="">
+  </a>
+  <h1 class="site-title">
+    Notes of Chloe
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              Python 那些好用的函数（含高阶函数）
+            </h2>
+            <div class="post-info">
+              <span>
+                07-15
+              </span>
+              <span>
+                5 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <h1 id="匿名函数lambda">匿名函数lambda</h1>
+<ul>
+<li>简化函数的书写形式，适用于短小的函数</li>
+</ul>
+<pre><code>def f(num):return num + 1
+# 可以简化写成lambda形式，用一个参数接收即可
+g = lambda x: x + 1
+print(g(1))
+print(f(1))
+# 运行结果都是2
+</code></pre>
+<ul>
+<li>匿名函数的格式
+<ul>
+<li>lambda 参数1,参数2: 返回值</li>
+</ul>
+</li>
+</ul>
+<h2 id="应用场景">应用场景</h2>
+<ul>
+<li>sorted函数</li>
+</ul>
+<pre><code>sorted(iterable,key=None, reverse=False)
+# key -- 主要是用来进行比较的元素，只有一个参数，具体的函数的参数就是取自于可迭代对象中，
+指定可迭代对象中的一个元素来进行排序。
+# reverse -- 排序规则，reverse = True 降序 ， reverse = False 升序（默认）。
+</code></pre>
+<h4 id="实例">实例</h4>
+<pre><code># 不经过lambda改良
+def f(stu:dict):
+    return stu['age']
+
+def sort_test():
+    students=[
+        {'name':'feisdmx','age':85},
+        {'name':'cfeid','age':20},
+        {'name':'ppepr','age':50},
+        {'name':'aaaeef的','age':26}
+    ]
+    print(sorted(students,key=f,reverse=True))
+
+if __name__ == '__main__':
+    sort_test()
+
+# 经过lambda改良后
+def sort_test():
+    students=[
+        {'name':'feisdmx','age':85},
+        {'name':'cfeid','age':20},
+        {'name':'ppepr','age':50},
+        {'name':'aaaeef的','age':26}
+    ]
+    print(sorted(students,key=lambda stu:stu['age']))
+
+if __name__ == '__main__':
+    sort_test()        
+</code></pre>
+<h1 id="zip">zip</h1>
+<ul>
+<li>将多个可迭代对象按照索引值顺序，各自组成以元组对，函数返回值是迭代器<br>
+<img src="https://chloeeew.github.io/post-images/1628215508684.png" alt="" loading="lazy"></li>
+</ul>
+<pre><code>a = ['a','b','c']
+b = [1,2,3]
+c = dict(zip(a,b))
+------
+{'a':1,'b':2,'c':3}
+</code></pre>
+<h1 id="递归">递归</h1>
+<ul>
+<li>通过递归的方法能够实现很多数学问题，如斐波那契数列等</li>
+<li>注意：递归至少要确定最前或最后的那个常数项，接下来的按照数学规律递归即可</li>
+</ul>
+<h3 id="斐波那契数列">斐波那契数列</h3>
+<pre><code>def fib(n):
+    if n==1 or n==2:
+        return 1
+    return fib(n-1)+fib(n-2)
+
+</code></pre>
+<h3 id="实现累加功能从1加到100">实现累加功能从1加到100</h3>
+<pre><code>def demo02(x=100):
+    if x==1:   # 递归结束条件    
+        return 1    # 结束递归
+    return demo02(x-1) + x    # 递归调用
+</code></pre>
+<h3 id="一个球从100米高度自由落下每次落地后反跳回原高度的一半再落下求它在第十次落地时共经过了多少米">一个球从100米高度自由落下，每次落地后反跳回原高度的一半，再落下，求它在第十次落地时，共经过了多少米？</h3>
+<pre><code>def free_fall(times):
+    if times == 1:
+        return 100
+    return free_fall(times-1) + 100//2**(times-1) * 2
+</code></pre>
+<p><mark>使用递归的规律：把题目中的数学规律找出来，写出第n次的数学表达式，把常数项（第1项或最后1项，把数转换为常数去替换倒数第二次递归的函数返回值）找出来作为最后return的值</mark></p>
+<h1 id="闭包">闭包</h1>
+<ul>
+<li>包：一个函数包着一个函数</li>
+<li>闭： 操作函数中的局部变量的一种方法</li>
+</ul>
+<h4 id="nonlocal关键字用来在函数或其他作用域中使用外层非全局变量">nonlocal关键字用来在函数或其他作用域中使用外层(非全局)变量。</h4>
+<pre><code>def 函数()：
+    result = 0 # local变量 局部变量
+    def 函数中的函数():
+        nonlocal result
+        result += 1
+    return 函数中的函数   # 把函数返回
+
+f = 函数()  # 返回值的类型是function     
+# 那么可以通过f()去访问函数中的函数，通过f()操作后，result是没有被重置的  
+</code></pre>
+<ul>
+<li>闭包可以实现数学中的y=ax+b，装饰器是闭包的一种</li>
+</ul>
+<pre><code>def line_def(a,b):
+    def wrapper(x):
+        return a*x+b
+</code></pre>
+<p><strong>闭包是一种编程思想：闭包打破了函数结束后资源全部销毁的情况，闭包能够保存函数仲某个变量的值</strong></p>
+<h1 id="高阶函数">高阶函数</h1>
+<ul>
+<li>高阶函数是函数里面的参数是函数</li>
+</ul>
+<h2 id="map">Map</h2>
+<ul>
+<li>会根据提供的函数对指定序列做映射</li>
+<li><strong>传递的参数是函数名字（函数实现比较简单的话，可以用匿名函数代替）  和可迭代对象</strong>，将可对迭代对象的每个值传递到指定函数中，并返回迭代器<br>
+<img src="https://chloeeew.github.io/post-images/1628215520407.png" alt="" loading="lazy"></li>
+</ul>
+<pre><code>g = map(lambda x,y:{x:y},['a','b','c'],[1,2,3]) # 返回的是迭代器对象
+print(next(g)) # 按照迭代器的方式输出第一个值，得到{'a'：1}
+# 也可以通过for循环输出其他的映射值
+for i in g:
+    print(i)
+</code></pre>
+<ul>
+<li>注意，函数的参数值个数，对应着后续可迭代对象的个数（函数形参有多少个，那么可迭代对象就要有多少个）</li>
+</ul>
+<pre><code>map(fuc(T1,T2,T3,T4),list1,list2,list3,list4)
+</code></pre>
+<h2 id="reduce">reduce</h2>
+<ul>
+<li>reduce方法接收一个function作为累积器，sequence中的每个值（从左到右）开始缩减，最终计算为一个值</li>
+</ul>
+<pre><code>from functools import reduce
+</code></pre>
+<h4 id="参数">参数</h4>
+<pre><code>reduce(function, sequence)
+</code></pre>
+<h4 id="实例-2">实例</h4>
+<pre><code>print(reduce(lambda x,y:x+y,range(1,101))) # 累加 从1加到1000
+print(reduce(lambda x,y:x*y,range(1,5)))  # 累乘 1*2*3*4=24 
+</code></pre>
+<h2 id="filter">filter</h2>
+<ul>
+<li>可以按照函数名代表功能，过滤出给的可迭代对象，并返回一个迭代器</li>
+</ul>
+<pre><code>f = filter(lambda x:x&gt;5,[1,2,3,4,5,6,7])
+f_list = [i for i in f]
+print(f_list)
+</code></pre>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li><a href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0lambda">匿名函数lambda</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF">应用场景</a><br>
+*
+<ul>
+<li><a href="#%E5%AE%9E%E4%BE%8B">实例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#zip">zip</a></li>
+<li><a href="#%E9%80%92%E5%BD%92">递归</a><br>
+*
+<ul>
+<li><a href="#%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97">斐波那契数列</a></li>
+<li><a href="#%E5%AE%9E%E7%8E%B0%E7%B4%AF%E5%8A%A0%E5%8A%9F%E8%83%BD%E4%BB%8E1%E5%8A%A0%E5%88%B0100">实现累加功能从1加到100</a></li>
+<li><a href="#%E4%B8%80%E4%B8%AA%E7%90%83%E4%BB%8E100%E7%B1%B3%E9%AB%98%E5%BA%A6%E8%87%AA%E7%94%B1%E8%90%BD%E4%B8%8B%E6%AF%8F%E6%AC%A1%E8%90%BD%E5%9C%B0%E5%90%8E%E5%8F%8D%E8%B7%B3%E5%9B%9E%E5%8E%9F%E9%AB%98%E5%BA%A6%E7%9A%84%E4%B8%80%E5%8D%8A%E5%86%8D%E8%90%BD%E4%B8%8B%E6%B1%82%E5%AE%83%E5%9C%A8%E7%AC%AC%E5%8D%81%E6%AC%A1%E8%90%BD%E5%9C%B0%E6%97%B6%E5%85%B1%E7%BB%8F%E8%BF%87%E4%BA%86%E5%A4%9A%E5%B0%91%E7%B1%B3">一个球从100米高度自由落下，每次落地后反跳回原高度的一半，再落下，求它在第十次落地时，共经过了多少米？</a></li>
+</ul>
+</li>
+<li><a href="#%E9%97%AD%E5%8C%85">闭包</a><br>
+*<br>
+*<br>
+* <a href="#nonlocal%E5%85%B3%E9%94%AE%E5%AD%97%E7%94%A8%E6%9D%A5%E5%9C%A8%E5%87%BD%E6%95%B0%E6%88%96%E5%85%B6%E4%BB%96%E4%BD%9C%E7%94%A8%E5%9F%9F%E4%B8%AD%E4%BD%BF%E7%94%A8%E5%A4%96%E5%B1%82%E9%9D%9E%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">nonlocal关键字用来在函数或其他作用域中使用外层(非全局)变量。</a></li>
+<li><a href="#%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0">高阶函数</a>
+<ul>
+<li><a href="#map">Map</a></li>
+<li><a href="#reduce">reduce</a><br>
+*
+<ul>
+<li><a href="#%E5%8F%82%E6%95%B0">参数</a></li>
+<li><a href="#%E5%AE%9E%E4%BE%8B-2">实例</a></li>
+</ul>
+</li>
+<li><a href="#filter">filter</a></li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/python-shu-ju-lei-xing-tuo-zhan-sui-ji/">
+              <h3 class="post-title">
+                Python数据类型拓展随记
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
