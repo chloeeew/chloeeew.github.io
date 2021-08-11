@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Chloe&apos;s Notebook</title>
-    <updated>2021-08-08T05:47:20.868Z</updated>
+    <updated>2021-08-11T03:37:50.139Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -10,6 +10,135 @@
     <logo>https://chloeeew.github.io/images/avatar.png</logo>
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Chloe&apos;s Notebook</rights>
+    <entry>
+        <title type="html"><![CDATA[扫码支付都有哪些可测点？]]></title>
+        <id>https://chloeeew.github.io/post/sao-ma-zhi-fu-du-you-na-xie-ke-ce-dian/</id>
+        <link href="https://chloeeew.github.io/post/sao-ma-zhi-fu-du-you-na-xie-ke-ce-dian/">
+        </link>
+        <updated>2021-08-11T03:36:10.000Z</updated>
+        <content type="html"><![CDATA[<blockquote>
+<p>最近代码写多了，得锻炼一下测试思维！基本功不能掉！</p>
+</blockquote>
+<h2 id="扫二维码付款这个流程有哪些测试点">扫二维码付款这个流程，有哪些测试点？</h2>
+<ul>
+<li>使用到的测试用例设计方法：场景法+等价边界值</li>
+<li>考虑角度：功能、界面、兼容、易用、安全、性能</li>
+<li>特性测试：移动端与web端还需要考虑中断、弱网、权限允许、指纹面纹、触摸屏等</li>
+</ul>
+<h5 id="整个扫码付款过程场景">整个扫码付款过程场景：</h5>
+<ol>
+<li>商户卖家生成二维码，用户看到二维码后-&gt;</li>
+<li>打开手机中存在支付功能的app进行扫码-&gt;</li>
+<li>确认支付的金额-&gt;</li>
+<li>点击支付-&gt;</li>
+<li>选择支付方式（余额、零钱通、信用卡、储蓄卡、花呗等）-&gt;</li>
+<li>输入支付密码（或面容支付）-&gt;</li>
+<li>得到支付结果信息-&gt;</li>
+<li>商家卖家得到收款信息-&gt;</li>
+<li>（可能会有手续费以及退款操作）</li>
+</ol>
+<h3 id="0-冒烟">0、冒烟</h3>
+<ul>
+<li>扫二维码后是否出现支付页面</li>
+<li>检查支付金额、商家和时间等信息</li>
+<li>可选择的支付方式中余额充足</li>
+<li>按照默认支付方式吊起面容或密码成功支付</li>
+<li>返回给用户支付信息、订单号、商家、时间等信息正确</li>
+<li>商家收到收款提示，余额增加，能查询到详细的首款</li>
+</ul>
+<h3 id="一-商户卖家生成二维码用户看到二维码后进行扫码">一、商户卖家生成二维码，用户看到二维码后进行扫码</h3>
+<ul>
+<li>二维码太大的情况下扫部分能否进入支付支付页面</li>
+<li>二维码太小能否支付app主动放大去扫</li>
+<li>过期了是否生成新的二维码</li>
+<li>扫了过期的二维码能否还能支付</li>
+<li>断网的情况下扫码</li>
+<li>弱网（2G/3G）条件下扫码</li>
+<li>扫码时人为中断操作（切换横竖屏、来消息提醒、插拔耳机、调节音量）是否影响跳转</li>
+<li>是否支持多人一起扫（准备抢着买单）</li>
+<li>是否支持不同支付app（不同版本）去扫相同的码</li>
+<li>是否支持不同手机操作系统定制rom的兼容</li>
+<li>能否扫多次，有没有最大扫码次数</li>
+</ul>
+<h3 id="二-扫码进入支付页面">二、扫码进入支付页面</h3>
+<ul>
+<li>如果是用户输入的话，检查输入内容（有没有限额，有则边界值、另外考虑金额的精度、是否能输入符号、中英文非数字）</li>
+<li>如果是商户卖家决定的金额，能够篡改商户？是否能够篡改金额？</li>
+<li>从不同应用或者中断后，返回支付页面</li>
+</ul>
+<h3 id="三-支付">三、支付</h3>
+<ul>
+<li>点击支付后吊起的弹窗金额是否等同支付页面金额（没有其他券、集分宝、红包的情况）</li>
+<li>有券、集分宝和红包时，是否自动抵扣，实际支付金额是否等于支付页面金额-券金额-集分宝-红包</li>
+<li>支付方式的顺序是否按照原先支付平台设定的顺序</li>
+<li>商户不支持的支付方式是否置灰不允许点击（信用卡或花呗）</li>
+<li>可选择的支付方式中余额不足（边界值）</li>
+<li>可选择的支付方式中余额充足但超过了这个支付方式的单日限额或单笔限额</li>
+<li>某支付方式因尝试超限额后，是否更新为置灰状态</li>
+<li>若默认第一项支付方式无法支付，第二顺序的支付方式是否成为接下来的默认支付方式</li>
+<li>实际支付金额、红包等金额是否能够篡改</li>
+<li>支付方式的置灰能否篡改为可点击</li>
+<li>中断切换到不同应用，返回支付页面是否正常</li>
+<li>点击取消后，是否返回原未支付的状态</li>
+</ul>
+<h4 id="支付密码支付密码-支付面容">支付密码（支付密码、支付面容）</h4>
+<ul>
+<li>支付密码输入（面容）的最大尝试次数</li>
+<li>支付密码未输入或输出错误后能否切换面容</li>
+<li>关闭支付密码是否返回到支付方式选择中，状态仍为未支付</li>
+<li>支付0元时，是否会吊起支付密码</li>
+</ul>
+<h4 id="支付中">支付中</h4>
+<ul>
+<li>断网支付</li>
+<li>同一用户，弱网单次、重复多次相同订单号的支付</li>
+<li>多个用户，同时支付同一个订单</li>
+</ul>
+<h4 id="支付成功">支付成功</h4>
+<ul>
+<li>支付成功后二维码的状态更新</li>
+<li>支付成功后扫过期二维码</li>
+<li>支付成功后用户断网（弱网），能否查询到支付历史</li>
+<li>支付成功后商户断网（弱网），是否有收款提醒或收款历史</li>
+</ul>
+<h4 id="红包等抵扣金额">红包等抵扣金额</h4>
+<ul>
+<li>红包金额恰好等于支付金额</li>
+<li>单个红包金额大于/小于需支付金额-边界值</li>
+<li>多个红包金额加起来大于/小于需支付金额-边界值</li>
+<li>红包金额抵扣后剩余0.01元</li>
+<li>红包金额只抵扣了0.01元</li>
+</ul>
+<h4 id="支付失败">支付失败</h4>
+<ul>
+<li>支付失败二维码状态变化</li>
+<li>支付失败扫旧的二维码</li>
+<li>支付失败重新扫二维码</li>
+</ul>
+<h3 id="手续费">手续费</h3>
+<ul>
+<li>若存在手续费，明确哪些支付方式存在手续费，哪方扣除，以及手续费的计算公式。不该收受手续费的不应扣除任何一方手续费</li>
+<li>收受手续费的，支付方式显示对应手续费费率，及得出计算后具体扣除多少手续费</li>
+<li>实际支付金额= 原始金额+手续费-红包等抵扣金额
+<ul>
+<li>单笔手续费最小收取金额-边界值</li>
+<li>原始金额时单笔最小金额，且手续费率收取为0.01%的情况</li>
+<li>单笔手续费最大收取金额-边界值</li>
+</ul>
+</li>
+</ul>
+<h3 id="退款">退款</h3>
+<ul>
+<li>商户发起退款后，用户和商户原本的账单状态信息是否更新</li>
+<li>原账单中发起退款的按钮是否容易被找到</li>
+<li>退款后，用户返回金额为实际付款金额（发起金额-红包等可抵扣金额），若有手续费，手续费不退回</li>
+<li>退款前若用户有使用券等，原路返回，但有效期与使用前有效期一致（退款后券的有效期结束，那么卷则返回到过期券中，不可使用）</li>
+<li>退款后返回的可用券，应可再次被使用</li>
+<li>退款后用户有收款信息</li>
+<li>退款后商户有扣款信息</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[关键字驱动的自动化测试]]></title>
         <id>https://chloeeew.github.io/post/guan-jian-zi-qu-dong-de-zi-dong-hua-ce-shi/</id>
@@ -870,255 +999,6 @@ D）消息推送测试，测试在不同的手机推送方式下，用户能否�
 <p>9.测试工具方面：app自动化工具使用Appium，Web一般使用Selenium</p>
 <hr>
 <p>本人CSDN中有相同内容博客：https://blog.csdn.net/weizhi3320/article/details/106016807</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Python元类-认识和应用]]></title>
-        <id>https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/</id>
-        <link href="https://chloeeew.github.io/post/python-yuan-lei-ren-shi-he-ying-yong/">
-        </link>
-        <updated>2020-04-06T15:03:16.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="元类metaclass">元类metaclass</h1>
-<h4 id="类的类型是什么">类的类型是什么？</h4>
-<p>元类，int、list等都是由元类创建的,type是Python的内建元类，任何类都有所属的元类（type）</p>
-<pre><code>print(type(1))
-print(type(int))
----运行结果---
-&lt;class 'int'&gt;
-&lt;class 'type'&gt;
-</code></pre>
-<h4 id="元类能干什么">元类能干什么？</h4>
-<ul>
-<li>元类的核心思想，就是捣鼓类这个对象、使你能对其有着最高程度的控制权</li>
-</ul>
-<h4 id="元类和类的关系">元类和类的关系</h4>
-<p>元类metaclass可以创建元类，元类创建类（包括object也是由type创建的），类创建对象</p>
-<h2 id="如何使用元类创建类">如何使用元类创建类？</h2>
-<ul>
-<li>方法一：通过type函数创建</li>
-</ul>
-<p>type(类名, 父类以元组表示（针对继承的情况，可以为空），包含的属性用字典表示（名称和值）)<br>
-例子</p>
-<pre><code>def __init__(self,name):
-    self.name = name
- 
-Student = type('Student',(object,),{'__init__':__init__,})
-aa = Student('chloee')
-print(Student)
-print(aa.name)
-------
-&lt;class '__main__.Student'&gt;
-chloee
-</code></pre>
-<ul>
-<li>方法二：继承type元类</li>
-</ul>
-<pre><code>class MyMetaclass(type):
-    def __new__(cls,name,bases,attrs):
-        &quot;&quot;&quot;
-        创建对象（这个对象是一个类）
-        name：字符串，类的名称
-        bases：元组(基础类1，基础类2……)
-        attrs：字典（__dict__属性）
-        &quot;&quot;&quot;
-        name = 'Person'
-        attrs['name'] = 'chloe'
-        attrs['age'] = 18
-        bases = (object,)
-        return type.__new__(cls,name,bases,attrs)
- 
-class MyClass(object, metaclass=MyMetaclass):
-    pass
- 
- 
-if __name__ == '__main__':
-    print(MyClass.name)
-    
-    
----运行结果--
-chloe
-</code></pre>
-<p>这两个创建的例子，好像都不是很能突出元类到底有什么用，感觉这...直接继承不就更好了吗？</p>
-<h3 id="应用例子例子是在另一个博主那找的稍微改动了一下">应用例子（例子是在另一个博主那找的，稍微改动了一下）</h3>
-<ul>
-<li>定义一个“人”（Person）类，它有三个方法：吃饭、睡觉、打游戏</li>
-<li>定义 Person 的三个子类“小张”（Zhang）、“小王”（Wang）、“小江”（Jiang）<br>
-定义“人”的子类“小周”（Zhou），使用元类， 要求他：<br>
-吃饭像小王一样快，能力<em>2<br>
-睡觉像小张一样香，能力</em>3<br>
-打游戏像小江一样熟练，能力*4</li>
-</ul>
-<pre><code>&quot;&quot;&quot;
-作为人类自然有吃喝玩的能力
-而三人只是在吃喝睡中有较强能力
-&quot;&quot;&quot;
-class Person:
-    def __init__(self):
-        self.ability = 1
- 
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability)
- 
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability)
- 
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability)
- 
- 
-class Wang(Person):
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 2)
- 
- 
-class Zhang(Person):
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 3)
- 
- 
-class Jiang(Person):
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 4)
- 小周使用元类获得最高的权限，他创建了元类，获得第一个继承的父类的吃方法，获得第二个继承的父类的睡觉方法，获得第三个继承父类的打游戏方法
-
-class MyMetaclass(type):
-    def __new__(cls, *args, **kwargs):
-        print(args)
-        name, bases, attrs = args[:3]
-        person1, person2, person3 = bases
- 
-        def eat(self):
-            person1.eat(self)
- 
-        def sleep(self):
-            person2.sleep(self)
- 
-        def play_game(self):
-            person3.play_game(self)
- 
-        attrs['eat'] = eat
-        attrs['sleep'] = sleep
-        attrs['play_game'] = play_game
- 
-        return type(name,bases,attrs)
- 
- 
- 
- 
-class Zhou(Zhang,Jiang,Wang,metaclass=MyMetaclass):
-    pass
-注意这里小周他第一个继承的父类是小张，而小张的吃饭技能只是普通人类的水平
-
-这里我们可以再定义一个人，”小红“（Hong）她也想像（Zhou）想的那样能吃能睡能打好游戏，但她就只继承就行了，继承顺序与Zhou一样
-
-class Hong(Zhang,Jiang,Wang):
-    pass
-输出一下小红和小周继承结果
-
-if __name__ == '__main__':
-    h = Hong()
-    z = Zhou()
-    print('-------')
-    h.eat()
-    z.eat()
-    print('-------')
-    h.sleep()
-    z.sleep()
-    print('-------')
-    h.play_game()
-    z.play_game()
- 
- 
----运行结果----
--------
-Eat:  2
-Eat:  1
--------
-Sleep:  3
-Sleep:  1
--------
-play game:  4
-play game:  1
-</code></pre>
-<p>小红达到了她的目标（菱形继承），而小周因为改了继承顺序没对应上想要的人的能力</p>
-<ul>
-<li>如果是继承的话，无论是eat、sleep还是play game都会寻找继承类中的eat、sleep和play game方法，即会找到wang的吃饭方法，zhang的睡觉方法，以及jiang的play game方法，那么都是获得最强的能力</li>
-<li>但如果是创建元类的话，就能获得最大的控制权，按照继承的顺序获得对应人的能力，如果继承第一位是Wang，那么按照创建元类对象的方法来看，就调用Wang的吃方法，即能力<em>2。如果继承第一位是Jiang，那么就调用Jiang的吃方法，即能力只是</em>1。这样能很好的控制，继承哪个类的哪个方法</li>
-<li>我们接着再试一下，把三位强人的吃喝玩游戏能力都改为不同于普通人的能力，小红还能获得小王的吃能力、小张的睡能力和小江的玩游戏能力吗？</li>
-</ul>
-<pre><code>class Wang(Person):
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 2)
- 
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 0.8)
- 
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 0.7)
- 
- 
-class Zhang(Person):
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 3)
- 
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 0.6)
- 
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 0.99)
- 
- 
-class Jiang(Person):
-    def play_game(self):
-        print(&quot;play game: &quot;, self.ability * 4)
- 
-    def sleep(self):
-        print(&quot;Sleep: &quot;, self.ability * 0.88)
- 
-    def eat(self):
-        print(&quot;Eat: &quot;, self.ability * 0.77)
- 
- 
-class Hong(Wang,Zhang,Jiang):
-    pass
- 
-class Zhou(Wang,Zhang,Jiang,metaclass=MyMetaclass):
-    pass
- 
- 
-if __name__ == '__main__':
-    h = Hong()
-    z = Zhou()
-    print('-------')
-    h.eat()
-    z.eat()
-    print('-------')
-    h.sleep()
-    z.sleep()
-    print('-------')
-    h.play_game()
-    z.play_game()
-Person类和MyMetaclass类没有变更
-
-那么输出的结果是，在继承顺序按照小王、小张、小江的情况下，小周能够如愿获得三人的能力
-
--------
-Eat:  2
-Eat:  2
--------
-Sleep:  0.8
-Sleep:  3
--------
-play game:  0.7
-play game:  4
-</code></pre>
-<p>但其实貌似也只是理解一下有元类这么一个概念，好像也不太需要用上它哈哈哈。</p>
-<pre><code> ”元类就是深度的魔法，99%的用户应该根本不必为此操心。如果你想搞清楚究竟是否需要用到元类，那么你就不需要它。那些实际用到元类的人都非常清楚地知道他们需要做什么，而且根本不需要解释为什么要用元类“  
-</code></pre>
-<ul>
-<li>CSDN博客亦有相同内容：</li>
-<li>https://blog.csdn.net/weizhi3320/article/details/118575612</li>
-</ul>
 ]]></content>
     </entry>
 </feed>

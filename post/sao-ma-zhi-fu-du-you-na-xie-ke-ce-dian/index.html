@@ -1,0 +1,319 @@
+<html>
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>扫码支付都有哪些可测点？ | Chloe&#39;s Notebook</title>
+<link rel="shortcut icon" href="https://chloeeew.github.io/favicon.ico?v=1628653065899">
+<link href="https://cdn.jsdelivr.net/npm/remixicon@2.3.0/fonts/remixicon.css" rel="stylesheet">
+<link rel="stylesheet" href="https://chloeeew.github.io/styles/main.css">
+<link rel="alternate" type="application/atom+xml" title="扫码支付都有哪些可测点？ | Chloe&#39;s Notebook - Atom Feed" href="https://chloeeew.github.io/atom.xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Serif:400,700">
+
+
+
+    <meta name="description" content="
+最近代码写多了，得锻炼一下测试思维！基本功不能掉！
+
+扫二维码付款这个流程，有哪些测试点？
+
+使用到的测试用例设计方法：场景法+等价边界值
+考虑角度：功能、界面、兼容、易用、安全、性能
+特性测试：移动端与web端还需要考虑中断、弱网、权限..." />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
+    <script src="https://cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+  </head>
+  <body>
+    <div class="main">
+      <div class="main-content">
+        <div class="site-header">
+  <a href="https://chloeeew.github.io">
+  <img class="avatar" src="https://chloeeew.github.io/images/avatar.png?v=1628653065899" alt="">
+  </a>
+  <h1 class="site-title">
+    Chloe&#39;s Notebook
+  </h1>
+  <p class="site-description">
+    Though not be given a head start, but trying to stand out from my peers.
+  </p>
+  <div class="menu-container">
+    
+      
+        <a href="/" class="menu">
+          首页
+        </a>
+      
+    
+      
+        <a href="/archives" class="menu">
+          全部
+        </a>
+      
+    
+      
+        <a href="/tags" class="menu">
+          标签
+        </a>
+      
+    
+      
+        <a href="/post/about" class="menu">
+          关于
+        </a>
+      
+    
+  </div>
+  <div class="social-container">
+    
+      
+    
+      
+    
+      
+    
+      
+    
+      
+    
+  </div>
+</div>
+
+        <div class="post-detail">
+          <article class="post">
+            <h2 class="post-title">
+              扫码支付都有哪些可测点？
+            </h2>
+            <div class="post-info">
+              <span>
+                08-11
+              </span>
+              <span>
+                6 min read
+              </span>
+              
+            </div>
+            
+            <div class="post-content-wrapper">
+              <div class="post-content">
+                <blockquote>
+<p>最近代码写多了，得锻炼一下测试思维！基本功不能掉！</p>
+</blockquote>
+<h2 id="扫二维码付款这个流程有哪些测试点">扫二维码付款这个流程，有哪些测试点？</h2>
+<ul>
+<li>使用到的测试用例设计方法：场景法+等价边界值</li>
+<li>考虑角度：功能、界面、兼容、易用、安全、性能</li>
+<li>特性测试：移动端与web端还需要考虑中断、弱网、权限允许、指纹面纹、触摸屏等</li>
+</ul>
+<h5 id="整个扫码付款过程场景">整个扫码付款过程场景：</h5>
+<ol>
+<li>商户卖家生成二维码，用户看到二维码后-&gt;</li>
+<li>打开手机中存在支付功能的app进行扫码-&gt;</li>
+<li>确认支付的金额-&gt;</li>
+<li>点击支付-&gt;</li>
+<li>选择支付方式（余额、零钱通、信用卡、储蓄卡、花呗等）-&gt;</li>
+<li>输入支付密码（或面容支付）-&gt;</li>
+<li>得到支付结果信息-&gt;</li>
+<li>商家卖家得到收款信息-&gt;</li>
+<li>（可能会有手续费以及退款操作）</li>
+</ol>
+<h3 id="0-冒烟">0、冒烟</h3>
+<ul>
+<li>扫二维码后是否出现支付页面</li>
+<li>检查支付金额、商家和时间等信息</li>
+<li>可选择的支付方式中余额充足</li>
+<li>按照默认支付方式吊起面容或密码成功支付</li>
+<li>返回给用户支付信息、订单号、商家、时间等信息正确</li>
+<li>商家收到收款提示，余额增加，能查询到详细的首款</li>
+</ul>
+<h3 id="一-商户卖家生成二维码用户看到二维码后进行扫码">一、商户卖家生成二维码，用户看到二维码后进行扫码</h3>
+<ul>
+<li>二维码太大的情况下扫部分能否进入支付支付页面</li>
+<li>二维码太小能否支付app主动放大去扫</li>
+<li>过期了是否生成新的二维码</li>
+<li>扫了过期的二维码能否还能支付</li>
+<li>断网的情况下扫码</li>
+<li>弱网（2G/3G）条件下扫码</li>
+<li>扫码时人为中断操作（切换横竖屏、来消息提醒、插拔耳机、调节音量）是否影响跳转</li>
+<li>是否支持多人一起扫（准备抢着买单）</li>
+<li>是否支持不同支付app（不同版本）去扫相同的码</li>
+<li>是否支持不同手机操作系统定制rom的兼容</li>
+<li>能否扫多次，有没有最大扫码次数</li>
+</ul>
+<h3 id="二-扫码进入支付页面">二、扫码进入支付页面</h3>
+<ul>
+<li>如果是用户输入的话，检查输入内容（有没有限额，有则边界值、另外考虑金额的精度、是否能输入符号、中英文非数字）</li>
+<li>如果是商户卖家决定的金额，能够篡改商户？是否能够篡改金额？</li>
+<li>从不同应用或者中断后，返回支付页面</li>
+</ul>
+<h3 id="三-支付">三、支付</h3>
+<ul>
+<li>点击支付后吊起的弹窗金额是否等同支付页面金额（没有其他券、集分宝、红包的情况）</li>
+<li>有券、集分宝和红包时，是否自动抵扣，实际支付金额是否等于支付页面金额-券金额-集分宝-红包</li>
+<li>支付方式的顺序是否按照原先支付平台设定的顺序</li>
+<li>商户不支持的支付方式是否置灰不允许点击（信用卡或花呗）</li>
+<li>可选择的支付方式中余额不足（边界值）</li>
+<li>可选择的支付方式中余额充足但超过了这个支付方式的单日限额或单笔限额</li>
+<li>某支付方式因尝试超限额后，是否更新为置灰状态</li>
+<li>若默认第一项支付方式无法支付，第二顺序的支付方式是否成为接下来的默认支付方式</li>
+<li>实际支付金额、红包等金额是否能够篡改</li>
+<li>支付方式的置灰能否篡改为可点击</li>
+<li>中断切换到不同应用，返回支付页面是否正常</li>
+<li>点击取消后，是否返回原未支付的状态</li>
+</ul>
+<h4 id="支付密码支付密码-支付面容">支付密码（支付密码、支付面容）</h4>
+<ul>
+<li>支付密码输入（面容）的最大尝试次数</li>
+<li>支付密码未输入或输出错误后能否切换面容</li>
+<li>关闭支付密码是否返回到支付方式选择中，状态仍为未支付</li>
+<li>支付0元时，是否会吊起支付密码</li>
+</ul>
+<h4 id="支付中">支付中</h4>
+<ul>
+<li>断网支付</li>
+<li>同一用户，弱网单次、重复多次相同订单号的支付</li>
+<li>多个用户，同时支付同一个订单</li>
+</ul>
+<h4 id="支付成功">支付成功</h4>
+<ul>
+<li>支付成功后二维码的状态更新</li>
+<li>支付成功后扫过期二维码</li>
+<li>支付成功后用户断网（弱网），能否查询到支付历史</li>
+<li>支付成功后商户断网（弱网），是否有收款提醒或收款历史</li>
+</ul>
+<h4 id="红包等抵扣金额">红包等抵扣金额</h4>
+<ul>
+<li>红包金额恰好等于支付金额</li>
+<li>单个红包金额大于/小于需支付金额-边界值</li>
+<li>多个红包金额加起来大于/小于需支付金额-边界值</li>
+<li>红包金额抵扣后剩余0.01元</li>
+<li>红包金额只抵扣了0.01元</li>
+</ul>
+<h4 id="支付失败">支付失败</h4>
+<ul>
+<li>支付失败二维码状态变化</li>
+<li>支付失败扫旧的二维码</li>
+<li>支付失败重新扫二维码</li>
+</ul>
+<h3 id="手续费">手续费</h3>
+<ul>
+<li>若存在手续费，明确哪些支付方式存在手续费，哪方扣除，以及手续费的计算公式。不该收受手续费的不应扣除任何一方手续费</li>
+<li>收受手续费的，支付方式显示对应手续费费率，及得出计算后具体扣除多少手续费</li>
+<li>实际支付金额= 原始金额+手续费-红包等抵扣金额
+<ul>
+<li>单笔手续费最小收取金额-边界值</li>
+<li>原始金额时单笔最小金额，且手续费率收取为0.01%的情况</li>
+<li>单笔手续费最大收取金额-边界值</li>
+</ul>
+</li>
+</ul>
+<h3 id="退款">退款</h3>
+<ul>
+<li>商户发起退款后，用户和商户原本的账单状态信息是否更新</li>
+<li>原账单中发起退款的按钮是否容易被找到</li>
+<li>退款后，用户返回金额为实际付款金额（发起金额-红包等可抵扣金额），若有手续费，手续费不退回</li>
+<li>退款前若用户有使用券等，原路返回，但有效期与使用前有效期一致（退款后券的有效期结束，那么卷则返回到过期券中，不可使用）</li>
+<li>退款后返回的可用券，应可再次被使用</li>
+<li>退款后用户有收款信息</li>
+<li>退款后商户有扣款信息</li>
+</ul>
+
+              </div>
+              <div class="toc-container">
+                <ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%89%AB%E4%BA%8C%E7%BB%B4%E7%A0%81%E4%BB%98%E6%AC%BE%E8%BF%99%E4%B8%AA%E6%B5%81%E7%A8%8B%E6%9C%89%E5%93%AA%E4%BA%9B%E6%B5%8B%E8%AF%95%E7%82%B9">扫二维码付款这个流程，有哪些测试点？</a><br>
+*<br>
+*<br>
+* <a href="#%E6%95%B4%E4%B8%AA%E6%89%AB%E7%A0%81%E4%BB%98%E6%AC%BE%E8%BF%87%E7%A8%8B%E5%9C%BA%E6%99%AF">整个扫码付款过程场景：</a>
+<ul>
+<li><a href="#0-%E5%86%92%E7%83%9F">0、冒烟</a></li>
+<li><a href="#%E4%B8%80-%E5%95%86%E6%88%B7%E5%8D%96%E5%AE%B6%E7%94%9F%E6%88%90%E4%BA%8C%E7%BB%B4%E7%A0%81%E7%94%A8%E6%88%B7%E7%9C%8B%E5%88%B0%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%90%8E%E8%BF%9B%E8%A1%8C%E6%89%AB%E7%A0%81">一、商户卖家生成二维码，用户看到二维码后进行扫码</a></li>
+<li><a href="#%E4%BA%8C-%E6%89%AB%E7%A0%81%E8%BF%9B%E5%85%A5%E6%94%AF%E4%BB%98%E9%A1%B5%E9%9D%A2">二、扫码进入支付页面</a></li>
+<li><a href="#%E4%B8%89-%E6%94%AF%E4%BB%98">三、支付</a>
+<ul>
+<li><a href="#%E6%94%AF%E4%BB%98%E5%AF%86%E7%A0%81%E6%94%AF%E4%BB%98%E5%AF%86%E7%A0%81-%E6%94%AF%E4%BB%98%E9%9D%A2%E5%AE%B9">支付密码（支付密码、支付面容）</a></li>
+<li><a href="#%E6%94%AF%E4%BB%98%E4%B8%AD">支付中</a></li>
+<li><a href="#%E6%94%AF%E4%BB%98%E6%88%90%E5%8A%9F">支付成功</a></li>
+<li><a href="#%E7%BA%A2%E5%8C%85%E7%AD%89%E6%8A%B5%E6%89%A3%E9%87%91%E9%A2%9D">红包等抵扣金额</a></li>
+<li><a href="#%E6%94%AF%E4%BB%98%E5%A4%B1%E8%B4%A5">支付失败</a></li>
+</ul>
+</li>
+<li><a href="#%E6%89%8B%E7%BB%AD%E8%B4%B9">手续费</a></li>
+<li><a href="#%E9%80%80%E6%AC%BE">退款</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+              </div>
+            </div>
+          </article>
+        </div>
+
+        
+          <div class="next-post">
+            <div class="next">下一篇</div>
+            <a href="https://chloeeew.github.io/post/guan-jian-zi-qu-dong-de-zi-dong-hua-ce-shi/">
+              <h3 class="post-title">
+                关键字驱动的自动化测试
+              </h3>
+            </a>
+          </div>
+        
+
+        
+
+        <div class="site-footer">
+  Link to <a href="https://github.com/chloeeew/" target="_blank">Chloe's github</a>
+  <a class="rss" href="https://chloeeew.github.io/atom.xml" target="_blank">
+    <i class="ri-rss-line"></i> RSS
+  </a>
+</div>
+
+      </div>
+    </div>
+
+    <script>
+      hljs.initHighlightingOnLoad()
+
+      let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+
+      // This should probably be throttled.
+      // Especially because it triggers during smooth scrolling.
+      // https://lodash.com/docs/4.17.10#throttle
+      // You could do like...
+      // window.addEventListener("scroll", () => {
+      //    _.throttle(doThatStuff, 100);
+      // });
+      // Only not doing it here to keep this Pen dependency-free.
+
+      window.addEventListener("scroll", event => {
+        let fromTop = window.scrollY;
+
+        mainNavLinks.forEach((link, index) => {
+          let section = document.getElementById(decodeURI(link.hash).substring(1));
+          let nextSection = null
+          if (mainNavLinks[index + 1]) {
+            nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(1));
+          }
+          if (section.offsetTop <= fromTop) {
+            if (nextSection) {
+              if (nextSection.offsetTop > fromTop) {
+                link.classList.add("current");
+              } else {
+                link.classList.remove("current");    
+              }
+            } else {
+              link.classList.add("current");
+            }
+          } else {
+            link.classList.remove("current");
+          }
+        });
+      });
+
+    </script>
+  </body>
+</html>
