@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://chloeeew.github.io</id>
     <title>Chloe&apos;s Notebook</title>
-    <updated>2021-08-11T03:50:41.688Z</updated>
+    <updated>2021-10-07T08:11:26.001Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://chloeeew.github.io"/>
     <link rel="self" href="https://chloeeew.github.io/atom.xml"/>
@@ -10,6 +10,991 @@
     <logo>https://chloeeew.github.io/images/avatar.png</logo>
     <icon>https://chloeeew.github.io/favicon.ico</icon>
     <rights>All rights reserved 2021, Chloe&apos;s Notebook</rights>
+    <entry>
+        <title type="html"><![CDATA[Java Grammar for Automation Testing]]></title>
+        <id>https://chloeeew.github.io/post/java-grammar-for-automation-testing/</id>
+        <link href="https://chloeeew.github.io/post/java-grammar-for-automation-testing/">
+        </link>
+        <updated>2021-10-07T08:03:04.000Z</updated>
+        <content type="html"><![CDATA[<!-- more -->
+<p>工作需要最近开始要捡起Java并且搭建Selenium为其基础的自动化测试框架，后续有一系列相关笔记，笔记都是英文也是为世所迫（工作需要也得捡起英语），拙劣英文的请见谅<br>
+Please excuse my English since I picked them up just a very short period of time.</p>
+<h1 id="java-grammar">Java Grammar</h1>
+<h3 id="first-java-grammar">First Java Grammar</h3>
+<pre><code class="language-java">public class HelloWorld{
+    public static void main(String[] args){
+        System.out.println(&quot;Hello World&quot;);
+    }
+}
+</code></pre>
+<h3 id="basic-grammar">Basic Grammar</h3>
+<ul>
+<li>Sensible for Uppercase and Lowercase</li>
+<li>Class name must be capitalized the first letter</li>
+<li>Method name must be all lowercases</li>
+<li>Source file name must be the same as Class name</li>
+<li>All Java program start from main method(refer public static void main(String[] args) in particular)</li>
+</ul>
+<p>add package declaration on the top of the code to indicate where the class lives</p>
+<pre><code class="language-java">package com.example.java;
+
+public class HelloWorld{
+    public static void main(String[] args){
+        System.out.println(&quot;Hello World&quot;);
+    }
+}
+</code></pre>
+<p>which means:  the HelloWorld.java is in the com\example\java\</p>
+<hr>
+<h3 id="java-se-8-api-documentation">Java SE 8 API Documentation</h3>
+<ul>
+<li>https://docs.oracle.com/javase/8/docs/api/</li>
+<li>https://blog.csdn.net/weixin_44034328/article/details/103645460</li>
+</ul>
+<hr>
+<h4 id="primitive-data-type">Primitive data type</h4>
+<p>primitive data type names are all lowercase</p>
+<ul>
+<li>
+<p>Number(In order to save memory, Number was divided into different types)</p>
+<img src="C:\Users\Chloe_Wang1\AppData\Roaming\Typora\typora-user-images\image-20210909174412325.png" alt="image-20210909174412325" style="zoom: 67%;" />
+<ul>
+<li>
+<p>Java class library includes helper classes (<em><strong>java.lang.Double</strong></em>) for each primitive</p>
+</li>
+<li>
+<p>Helper classes support conversion and formatting tools</p>
+<img src="C:\Users\Chloe_Wang1\AppData\Roaming\Typora\typora-user-images\image-20210909175829688.png" alt="image-20210909175829688" style="zoom:50%;" />
+<pre><code class="language-java">double a = 123.4d;
+Double b = new Double(a);
+int c = b.byteValue();
+float f = b.floatValue();
+</code></pre>
+</li>
+<li>
+<p>Primitive numeric variables <strong>default to 0</strong></p>
+</li>
+<li>
+<p>How to get the maximum number of each type?</p>
+<pre><code class="language-java">System.out.println(&quot;maximum：Byte.MAX_VALUE=&quot; + Byte.MAX_VALUE);  
+</code></pre>
+</li>
+<li>
+<p>for float and double, what you've store aren't exactly what you've store. So <em><strong><u>BigDecimal</u></strong></em> is specifically designed to take care of this precision problems.</p>
+</li>
+</ul>
+<pre><code>double finalBill = (this.taxRate * 0.01 +1)*this.initialBill;
+BigDecimal fb = BigDecimal.valueOf(finalBill).setScale(2, RoundingMode.HALF_UP);
+</code></pre>
+<ul>
+<li>
+<p>You have to add 'L' at the end of a long type value or otherwise, it would consider as an integer.</p>
+<pre><code>long ll = 2147483648L;
+</code></pre>
+</li>
+<li>
+<p>You have to add 'F' or 'f' right after a float type value or otherwise, it would consider as an integer or double</p>
+<pre><code>float ff = 2.0f;
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Character</p>
+<ul>
+<li>Single quotation mark contains one character(2 bit)</li>
+</ul>
+</li>
+<li>
+<p>booleans (true/false)</p>
+</li>
+</ul>
+<p><u><em><strong>java is a statically typed language, so all variables must have their types declared</strong></em></u></p>
+<pre><code class="language-java">int myVar 5;
+</code></pre>
+<ul>
+<li>
+<p>when type was declared, you can't change the type</p>
+</li>
+<li>
+<p>use camel case to define the identifier(myVar)</p>
+</li>
+</ul>
+<h4 id="conversion">Conversion</h4>
+<ul>
+<li>
+<p>automatic convert: from low to high</p>
+<pre><code>byte,short,char—&gt; int —&gt; long—&gt; float —&gt; double 
+</code></pre>
+</li>
+<li>
+<p>force to convert</p>
+<pre><code class="language-java">public static int[] printArray(double[] args){
+    int[] result = new int[args.length];
+    for (int i=0; i&lt; args.length;i++) {
+    	// convert double to int by using (int) 
+    	result[i] = (int)args[i];
+    }
+    return result;
+}
+</code></pre>
+</li>
+<li>
+<p>use helper classes to convert</p>
+<pre><code class="language-java">for (int i=0; i&lt; args.length;i++) {
+    Double doubleHelp = new Double(args[i]);
+    result[i] = doubleHelp.intValue();
+}
+</code></pre>
+</li>
+</ul>
+<hr>
+<h3 id="reference-data-type">Reference data type</h3>
+<ul>
+<li>
+<p>String</p>
+<ul>
+<li>
+<p><strong>Commonly Used Method</strong></p>
+<ul>
+<li>
+<p><strong>equals()</strong> : compares this string to the specified object, return true or false.</p>
+<pre><code class="language-java">public boolean equals(Object)
+</code></pre>
+</li>
+<li>
+<p>equalsIgnoreCase(): similar to equals(), but this one will ignore its upper case or lower case.</p>
+<pre><code class="language-java">public boolean equalsIgnoreCase(String anotherString)
+</code></pre>
+</li>
+<li>
+<p><strong>replace()</strong>: replace substring of this string with replacement sequence</p>
+<pre><code class="language-java">public String replace(CharSequence target,
+                      CharSequence replacement)
+</code></pre>
+</li>
+<li>
+<p>contains() : return true if and only if this string contains the sub-string</p>
+<pre><code class="language-java">public boolean contains(CharSequence s)
+</code></pre>
+</li>
+<li>
+<p>endsWith(): tests if this string ends with the specified string</p>
+<pre><code class="language-java">public boolean endsWith(String suffix)
+</code></pre>
+</li>
+<li>
+<p>indexOf(): returns the index with this string of the first occurence of the specified string.</p>
+<pre><code class="language-java">public int indexOf(String str)
+</code></pre>
+</li>
+<li>
+<p>split(): splits this string around matches of the given regular expression</p>
+<pre><code class="language-java">public String[] split(String regex)
+</code></pre>
+</li>
+<li>
+<p>substring(): returns a string that is a substring of this string. the substring begins at the specified beginIndex and extends to the character at endIndex(but not including the endIndex).</p>
+<pre><code class="language-java">public String substring(int beginIndex,
+                        int endIndex)
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>StringBuffer</strong></p>
+<ul>
+<li>
+<p>hundreds of good to use method that you can check it in API docs</p>
+<pre><code class="language-java">StringBuffer ab1 = new StringBuffer();
+StringBuffer ab2 = ab1.append(&quot;hello&quot;);
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Class</p>
+</li>
+<li>
+<p>Array</p>
+<ul>
+<li>
+<p>Array create a <u><em>continuous memory space</em></u></p>
+</li>
+<li>
+<p>Characteristic: <strong>Fixed Length + Fixed Type</strong></p>
+<ul>
+<li>
+<p>Initialized by fixed value</p>
+</li>
+<li>
+<p>Dynamic initialization : all elements default value are 0\0.0\false\ ' ' \ null (it depends on the data type)</p>
+<pre><code class="language-java">double[] dd = new double[5];
+System.out.println(dd.length);
+System.out.println(dd[2]);
+// 5
+// 0
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>How to obtain elements in this array? How to change elements in this array? :  <strong>Bracket + Index</strong>(index number can not be a negative number)</p>
+<pre><code class="language-java">int[] d = {1,2,3,4,5};
+System.out.println(d[1]);
+System.out.println(d[4]);
+// 2 
+// 5
+d[3] = 100;
+System.out.println(d[3]);
+// 100
+</code></pre>
+</li>
+<li>
+<p>How to get the length of the array?: <strong>array.length</strong></p>
+<pre><code>System.out.println(d.length);
+// 5
+</code></pre>
+</li>
+<li>
+<p><em><strong>Common Exception to Array</strong></em>:</p>
+<ul>
+<li>java.lang.ArrayIndexOutOfBoundsException</li>
+<li>java.lang.NullPointerException, which is often caused by null</li>
+</ul>
+</li>
+<li>
+<p>Pass as parameter:</p>
+<pre><code class="language-java">public static void printArray(double[] args){
+    for (double arg : args) {
+        System.out.println(arg);
+    }
+}
+public static void main(String[] args) {
+    // the 1st way
+    double[] myList = {1.9, 2.9, 3.4, 3.5};
+    printArray(myList);
+    // the 2nd way
+    printArray(new double[]{2,3,4,5,6});
+}
+</code></pre>
+</li>
+<li>
+<p>Multidimensional Array</p>
+<pre><code class="language-java">type[][] typeName = new type[typeLength1][typeLength2];
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>enum</p>
+</li>
+<li>
+<p>Interface</p>
+</li>
+</ul>
+<h4 id="two-dimensional-array">Two-Dimensional Array</h4>
+<ul>
+<li>Create Statically
+<ul>
+<li><code>DataType[][] varName = {{..},{..},{..},..};</code></li>
+</ul>
+</li>
+<li>Create Dynamically
+<ul>
+<li>The sub-array in this array is uncertain(if initialize, you have to initialize every sub-array): <code>DataType[][] varName = new DataType[size</code>][]</li>
+<li>The sub-array is certain: <code>DataType[][] varName = new DataType [size] [size]</code></li>
+</ul>
+</li>
+</ul>
+<pre><code class="language-java">// In this case [0]=null
+String[][] ss = new String[3][]
+// Initialize
+ss[0] = new String[3]
+// sub-array is certain
+String[][] tt = new String[3][2]
+</code></pre>
+<h4 id="precaution-to-reference-data-type">Precaution to reference data type</h4>
+<ul>
+<li>they all store address value(location info) in memory</li>
+</ul>
+<pre><code class="language-java">int[] d = {1,2,3,4,5};
+System.out.println(d);
+// [I@1b6d3586
+</code></pre>
+<ul>
+<li><strong>null</strong> can be assigned to any reference type: you can output the variable, but you can not use this variable</li>
+</ul>
+<h4 id="java-provide-reference-data-type-to-almost-every-primitive-data-type">Java Provide Reference data type to almost every primitive data type</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">primitive type</th>
+<th style="text-align:center">reference type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">boolean</td>
+<td style="text-align:center">Boolean</td>
+</tr>
+<tr>
+<td style="text-align:center">byte</td>
+<td style="text-align:center">Byte</td>
+</tr>
+<tr>
+<td style="text-align:center">char</td>
+<td style="text-align:center">Character</td>
+</tr>
+<tr>
+<td style="text-align:center">short</td>
+<td style="text-align:center">Short</td>
+</tr>
+<tr>
+<td style="text-align:center">int</td>
+<td style="text-align:center">Integer</td>
+</tr>
+<tr>
+<td style="text-align:center">long</td>
+<td style="text-align:center">Long</td>
+</tr>
+<tr>
+<td style="text-align:center">float</td>
+<td style="text-align:center">Float</td>
+</tr>
+<tr>
+<td style="text-align:center">double</td>
+<td style="text-align:center">Double</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="process-control">Process Control</h2>
+<h4 id="control">Control</h4>
+<ul>
+<li>
+<p>Switch</p>
+<ul>
+<li>Data types that can be accepted by case are limited
+<ul>
+<li>int / byte / char / short / String / enum</li>
+</ul>
+</li>
+</ul>
+<pre><code>String dd = &quot;Chloe&quot;;
+switch (dd){
+    case &quot;chloe&quot;:
+        System.out.println(&quot;111&quot;);
+        break;
+    case &quot;Chloe&quot;:
+        System.out.println(&quot;3233&quot;);
+        break;
+    default:
+        System.out.println(&quot;0000&quot;);
+        break;
+}
+</code></pre>
+<ul>
+<li>pros: <strong>good performance</strong></li>
+</ul>
+</li>
+<li>
+<p>if..else if..else</p>
+<ul>
+<li>multiple branches</li>
+<li>branches are mutually exclusive</li>
+</ul>
+</li>
+</ul>
+<h4 id="loop">Loop</h4>
+<ul>
+<li>
+<p>for</p>
+<ul>
+<li>
+<p>enhanced loop</p>
+</li>
+<li>
+<p>normal loop</p>
+<ul>
+<li>
+<p>multiple arguments</p>
+<pre><code class="language-java">for(int i=A.lenth()-1,j=0;i&gt;=0;i--,j++){
+            if(mm.charAt(i)!=mm.charAt(j)){
+                System.out.println(&quot;dddd&quot;);
+        }
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>Nested loops</p>
+</li>
+<li>
+<p>We used to loop array by the old method, but JDK 1.5 introduced a new loop method(what we call &quot;<strong>For-Each Loop</strong>&quot;). In this situation, intelliJ is deprecating the old loop method</p>
+</li>
+</ul>
+<pre><code class="language-java">double[] myList = {1.9, 2.9, 3.4, 3.5};
+	// old loop method
+    for(int i=0;i&lt;myList.length;i++){
+    System.out.println(myList[i]);
+    }
+    // new loop method
+    for(double myElement:myList){
+    System.out.println(myElement+&quot; eee&quot;);
+    }
+</code></pre>
+</li>
+<li>
+<p>while</p>
+<ul>
+<li><code>while(condition statement){statement1;}</code></li>
+<li><code>do{}while(condition)</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="functionmethod">Function(Method)</h2>
+<ul>
+<li>There's no run order between each Function in the same Class</li>
+</ul>
+<h4 id="common-type">Common Type</h4>
+<ul>
+<li>
+<p>common method</p>
+<ul>
+<li>format: <code>Modifier ReturnType MethodName(parameter list){Method Body}</code></li>
+</ul>
+<pre><code class="language-java">public static int age(int birthday){...}
+</code></pre>
+</li>
+<li>
+<p><strong>overload method</strong></p>
+<ul>
+<li>Definition: In the same class, you can create a method with <strong>the same method name</strong> that already hava <strong>but with different parameter types</strong> as an over load method. (ps: There's nothing to do with return type)</li>
+</ul>
+<pre><code class="language-java">public static void main(String[] args) {
+    System.out.println(add(2));
+    System.out.println(add(2,3));
+    System.out.println(add(2.3d,2));
+}
+public static int add(int a, int b){
+    return a+b;
+}
+public static double add(double a, double b){
+    return a+b;
+}
+public static int add(int a){
+    return 1+a;
+}
+// output: 3\5\4.3
+</code></pre>
+<ul>
+<li>Uses: Reduce the memory of different method, it's convenient for caller</li>
+</ul>
+</li>
+<li>
+<p><strong>Override method</strong></p>
+<ul>
+<li>Condition of use: Inheritance or Polymorphism</li>
+<li>Pros: upgrade old method</li>
+<li>Optional(for calibration): you can add &quot;<code>@Override</code>at the top of the method, which is to check if it is a override method(if it isn't, then IDE will throw an exception)</li>
+<li>How can I call the method with the same name of parent class? : by using key word <code>super</code> (but you can't find grandparent's class)</li>
+</ul>
+<pre><code class="language-java">public class IPhone4S extends IPhone{
+    public void Siri(){
+        System.out.println(&quot;111&quot;);
+    }
+}
+
+public class IPhone5 extends IPhone4{
+    @Override
+    public void Siri(){
+        super.Siri();
+        System.out.println(&quot;222&quot;);
+    }
+}
+</code></pre>
+</li>
+<li>
+<p><strong>Construct method</strong></p>
+<ul>
+<li>Used for constructing a new object</li>
+<li>format:<code>public void ClassName(){}</code>
+<ul>
+<li>you can omit return data type, because construct method must return null</li>
+</ul>
+</li>
+<li>constuct method can be a overload method</li>
+<li>One thing to note is that when passing parameters into construct method, and your parameter name is the same with the variable name in class, you should use &quot;<mark>this</mark>&quot; to distinguish them(local variables and member variables).</li>
+</ul>
+<pre><code class="language-java">public class Calculator {
+String name;
+int age;
+public Calculator(String name,int age){
+    this.name = name;
+    this.age = age;
+}
+public void PrintOut(){
+    System.out.println(this.name);
+    System.out.println(this.age);
+}
+}
+
+
+public static void main(String[] args) {
+      Calculator cc = new Calculator(&quot;aaa&quot;,3);
+      cc.PrintOut();
+}
+// output:aaa 3      
+</code></pre>
+</li>
+<li>
+<p>Abstract method</p>
+<ul>
+<li>abstract method define a prototype of a method, it doesn't implement any specific rules</li>
+<li>shows in Interface</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="objectobject-oriented">Object(Object-Oriented)</h2>
+<ul>
+<li>
+<p>Diffrence between Object and Class</p>
+<ul>
+<li>Class is just like a template, describe something or some action with common.<strong>(Abstract)</strong>
+<ul>
+<li>a mobile phone, which be able to take a call and message. Define phone's brand, price and tag.</li>
+</ul>
+</li>
+<li>Object describes something or some actions from class more specific
+<ul>
+<li>apple mobile phone, which has specific price tag, phone size, os characteristic and so on.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Instantiate Object(Create an object)</p>
+<ul>
+<li><code>ClassName ObjectName = new ClassName()</code></li>
+</ul>
+<pre><code class="language-java">Calculator cc = new Calculator();
+</code></pre>
+</li>
+<li>
+<p><strong>Three Characteristic in Object: Encapsulation, Polymorphism, Inheritance</strong></p>
+<ul>
+<li>
+<p>Encapsulation: which enhance the readability and maintainability of code</p>
+<ul>
+<li>limit the modification of object's variable</li>
+</ul>
+<pre><code class="language-java">Public Class Calculator{
+    private String name; // You won't have any access unless you visit it by method in the same class.
+    
+    public void setName(String name){
+        this.name = name
+    }
+    
+    public String getName(){
+        return this.name
+    }
+    
+}
+</code></pre>
+</li>
+<li>
+<p>Inheritance: if A class inherit B class, then A class owns all public method of B class.</p>
+<ul>
+<li>use &quot;<strong>extends</strong>&quot; to inherit</li>
+</ul>
+<pre><code class="language-java">public class People {
+    private String name;
+    private int age;
+
+    public int getAge(){
+        return this.age;
+    }
+    public String getName(){
+        return this.name;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+public class Engineer extends People{
+}
+
+public class InheritDemo {
+    public static void main(String[] args) {
+        Engineer ee = new Engineer();
+        ee.setAge(23);
+        System.out.println(ee.getAge());
+    }
+}
+// 23
+</code></pre>
+<ul>
+<li>if a class do not inherit from other class, then it will automatically inherit Object class by default(ancestor class)</li>
+<li>class can inherit only one class, but class can be inherited by multiple classes.<strong>(Single Inheritance)</strong></li>
+<li>could not inherit any private members of parent class</li>
+<li>when create object from a child class, java will call the construct method of its parent class at the beginning.</li>
+</ul>
+</li>
+<li>
+<p>Polymorphism</p>
+<ul>
+<li>
+<p>Receive objects of subclasses with the type of the parent class</p>
+</li>
+<li>
+<p>the same method that can be perform in different action accroding to their different morphology(example:Human and Monkey, they're all inherit Creature).</p>
+</li>
+<li>
+<p>in the condition of inheritance</p>
+</li>
+<li>
+<p>It reflects scalability</p>
+<pre><code class="language-java">ParentClass variableName = new ChildClassName();
+</code></pre>
+<ul>
+<li>
+<p>Pros: able to accept all sub-classes object by only one parent class variable.</p>
+</li>
+<li>
+<p>However, in this situation, <strong>you can not call the unique method of Child Class</strong>. So, you can only call the method shared by both parent class and child class, which should be an override method that overridden by child class.</p>
+<ul>
+<li>
+<p>How can I call the unique method of child class? : Forced Conversion</p>
+<pre><code class="language-java">Card card = new ACard();
+ACard aCard = (ACard)card;
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="modifier">Modifier</h2>
+<h4 id="access-modifier">Access Modifier</h4>
+<ul>
+<li><strong>public</strong> : you can access in any case</li>
+<li><strong>protected</strong>: you can access when you inherit the class(wherever the package is)</li>
+<li><strong>default</strong> : you can access in the same package(it means in the same folder).</li>
+<li><strong>private</strong> : you can access in the same class.</li>
+</ul>
+<h4 id="non-access-modifier">Non-Access Modifier</h4>
+<ul>
+<li>static : you can call it without instantiate an object</li>
+<li>final : you can not overwrite this method/class (Format is as follows)</li>
+</ul>
+<p>public static final String ECOMMERCE_URL = &quot;http://automationpractice.com/index.php&quot;;</p>
+<pre><code>
+- abstract : use for setting a initial mehtod, then refine the method by rewriting it.
+
+---
+
+## Collection
+
+*Container is use for storing data*
+
+- **ArrayList** : Resizable-array, the actual realization is to create a new array for the sake of expansion
+
+  - When instantiate, it constructs an empty list with an initial capacity of 10.
+
+  - You have to regulate the data type of this collection(That's what we call **Generics&lt;&gt;**), and this data type must be **reference data type**. Java do not recommend you to ignore the specific data type in this collection.
+
+  - **Collection Polymorphism** : use Interface as a datatype(No difference, but to remember that you can not instantiate that Interface)
+
+    ```java
+    List&lt;String&gt; list1 = new ArrayList&lt;&gt;();
+    ```
+    
+  - Usage example:
+
+    ```java
+    public static void main(String[] args) {
+            // not recommend you to do so
+            // ArrayList al = new ArrayList(); // it turns out you add multiple object in al
+    
+            // this is the preferable one
+            ArrayList&lt;String&gt; al = new ArrayList&lt;&gt;();
+            // or ArrayList&lt;String&gt; al = new ArrayList&lt;String&gt;();
+    
+            al.add(&quot;ccc&quot;);
+            al.add(&quot;ddd&quot;);
+            al.add(&quot;ooo&quot;);
+    
+            System.out.println(al); // ToString() has been overwritten by ArrayList
+            // output:[ccc, ddd, ooo]
+        }
+    ```
+    
+  - Commonly used method:
+
+    - **add()** : append specified element to the end of the list
+    - addAll() : append all the element in the specified collection to the end of the list
+    - **get()**: Returns the element at the specified position in this list.
+    - **size()**: Returns the number of elements in this list.
+    - isEmpty(): Returns `true`if this list contains no elements.
+    - remove() : Removes the element at the specified position in this list. or Removes the first occurrence of the specified element from this list, if it is present.(Overload method)
+    - set() : Replaces the element at the specified position in this list with the specified element.
+
+  - 3 types of loop
+
+    - by index
+
+      ```java
+      for(int i=0;i&lt;al.size();i++){
+                  System.out.println(al.get(i));
+              }
+      ```
+
+    - by enhanced loop
+
+      ```java
+      for(String a:al){
+                  System.out.println(a);
+              }
+      ```
+
+    - by iterator (not every container has index, then iterator appeared) --- less important
+
+      ```java
+      Iterator&lt;String&gt; ial = al.iterator();
+              while(ial.hasNext()){
+                  System.out.println(ial.next());
+              }
+      ```
+
+- HashSet: Unordered(just not in order of the addition, they calculate the order by their own algorithm), no index, **non-repeatable**. 
+
+  - Usage example:
+
+    ```java
+    HashSet&lt;String&gt; al = new HashSet&lt;&gt;();
+    
+    al.add(&quot;ccc&quot;);
+    al.add(&quot;ddd&quot;);
+    al.add(&quot;ooo&quot;);
+    al.add(&quot;22&quot;);
+    al.add(&quot;ddd&quot;);
+    
+    System.out.println(al); // Output:[22, ccc, ddd, ooo]
+    ```
+
+  - **Collection Polymorphism** : use Interface as a datatype(No difference, but to remember that you can not instantiate that Interface)
+
+    ```java
+    Set&lt;String&gt; set1 = new HashSet&lt;&gt;();
+    ```
+
+  - Commonly used method  (HashSet and ArrayList are all inheriting from Collection, so most of their methods are similar to each other.)
+
+    - add() : Adds the specified element to this set if it is not already present.(**if it is already present, then return false**)
+    - remove() : Removes the **specified element** from this set if it is present.
+    - size() : Returns the number of elements in this set (its cardinality).
+
+  - Loop (no index in HashSet)
+
+    - enhanced loop
+    - iterator
+
+- HashMap : store data in form of key-value pairs, but key shouldn't be the same. 
+
+  - `HashMap&lt;k,v&gt; varName = new HashMap&lt;k,v&gt;();`
+
+  - key is unordered,no-index and non-repeatable
+
+  - **Collection Polymorphism** : use Interface as a datatype(No difference, but to remember that you can not instantiate that Interface)
+
+    ```java
+    Map&lt;String,String&gt; map = new HashMap&lt;&gt;();
+
+  - Commonly use method
+
+    - get() : Returns the value to which the specified key is mapped, or `null` if this map contains no mapping for the key.  
+
+      ```java
+      HashMap&lt;String,Integer&gt; aa = new HashMap&lt;&gt;();
+      aa.put(&quot;eee&quot;,22);
+      aa.put(&quot;eer&quot;,34);
+      System.out.println(aa); // {eer=34, eee=22}
+      System.out.println(aa.get(&quot;eee&quot;)); //22
+      ```
+
+    - put() : Associates the specified value with the specified key in this map. If the map previously contained a mapping for the key, the old value is replaced.
+
+      ```java
+      public V put(K key,V value)
+      ```
+
+    - **containsKey()** : Returns `true` if this map contains a mapping for the specified key.(*Given the fact that key is non-repeatable*)
+
+      ````
+      public boolean containsKey(Object key)
+      ````
+
+    - getOrDefault() : Returns the value to which the specified key is mapped, or default Value if this map contains no mapping for the key.
+
+      ```
+      public V getOrDefault(Object key, V defaultValue)
+      ```
+
+    - **keySet()** : Set is implemented by HashSet, so Set is just like parent, and keySet() is child that implement Set.(You can not instantiate interface) 
+
+      ```
+      public Set&lt;K&gt; keySet()
+      ```
+
+      - Usage :  pair with get(key)
+
+        ```
+        Set&lt;String&gt; ss = aa.keySet();
+        for(String s :ss){
+        	System.out.println(s + &quot;=&quot; + aa.get(s));
+        }
+        ```
+
+    - **entrySet()**: similar to dict.items() in Python
+
+      - `public Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet()`
+
+      - Implementation logic
+
+        ```java
+        class Entry{
+        	K key;
+        	V value;
+        }
+        ```
+
+      - Usage
+
+        ```java
+        Set&lt;Map.Entry&lt;String, Integer&gt;&gt; entries = aa.entrySet();
+                // or Set&lt;Entry&lt;String, Integer&gt;&gt; entries = aa.entrySet(); ( but you should import java.util.Map.Entry )
+                for(Map.Entry&lt;String, Integer&gt; en:entries){
+                    System.out.println(en.getKey() + &quot; == &quot; + en.getValue());
+                }
+            }
+        ```
+
+    - foreach() : loop method that similar to entrySet(), but is more convenient
+
+      - `public void forEach(BiConsumer&lt;? super K,? super V&gt; action)`
+
+      - Usage
+
+        ```java
+        aa.forEach((k,v)-&gt;{
+                    System.out.println(k + &quot;==&quot; + v);
+                });
+        ```
+
+
+
+
+
+---
+
+## Interface
+
+- Interface is a collection of abstract methods, you should overwrite every abstract method later on class which implemented the interface.
+
+  ```java
+  public interface BaBa{
+      int size();
+  }
+  public class ArraryCheck implements BaBa{
+      // overwrite size
+      public int size(){
+          return 1;
+      }
+  } 
+</code></pre>
+<ul>
+<li>
+<p>Similar with class, but somehow they're quite different:</p>
+<ul>
+<li>Interface can not be instantiated</li>
+<li>There's no construct method in Interface</li>
+<li>Interface is born to be impletemented</li>
+<li>but unlike inheritance, multiple interfaces can be implemented.</li>
+</ul>
+</li>
+<li>
+<p>What's the similarities and differences between abstract class and interface?</p>
+<ul>
+<li>Similarities:
+<ul>
+<li>Both can not create an object.</li>
+<li>Both contains abstract methods.</li>
+</ul>
+</li>
+<li>differences:
+<ul>
+<li>abstract class embody commonality</li>
+<li>interface embody characteristic</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Characteristic:</p>
+<ul>
+<li>Every method is a hidden abstract, which means they hide the modifier <strong>public abstract</strong></li>
+<li>Every variable can be hidden, but the modifier of each variable should only be <strong>public static final</strong></li>
+<li>You can not implement method in interface, but you can do it in class by implemented the interface.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="memory-mechanism">Memory Mechanism</h2>
+<ul>
+<li>Java put memory into two type:
+<ul>
+<li><strong>Stack Memory</strong>
+<ul>
+<li>Stack characteristic: First In Last Out(FILO)</li>
+<li>pressing method or variable into the bottom of stack</li>
+<li>Stack store the access address for heap memory space</li>
+</ul>
+</li>
+<li><strong>Heap Memory</strong>
+<ul>
+<li>use for storing array and object create by &quot;new&quot;(every time you create an object, java allocates memory space from heap, which is pointed by stack memory)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="keyboard-shortcut">Keyboard Shortcut</h2>
+<ul>
+<li>check files : double Shift</li>
+<li>check the inherit relation: Ctrl + H</li>
+<li>import: alt+Enter</li>
+<li>input println : sout</li>
+<li>input println with <code>Class name.Method name</code> : soutm</li>
+<li>file formatting: Crtl+Alt+L</li>
+</ul>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[扫码支付都有哪些可测点？]]></title>
         <id>https://chloeeew.github.io/post/sao-ma-zhi-fu-du-you-na-xie-ke-ce-dian/</id>
@@ -968,37 +1953,6 @@ Type &quot;help&quot;, &quot;copyright&quot;, &quot;credits&quot; or &quot;licen
 <li>一开始配置好的内容，需要一点时间让它去解析，切勿急躁</li>
 <li>如果按照这个步骤还有任何问题，请联系～</li>
 </ol>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[APP测试与WEB测试的区别(异同)]]></title>
-        <id>https://chloeeew.github.io/post/app-ce-shi-yu-web-ce-shi-de-qu-bie-yi-tong/</id>
-        <link href="https://chloeeew.github.io/post/app-ce-shi-yu-web-ce-shi-de-qu-bie-yi-tong/">
-        </link>
-        <updated>2020-08-05T13:38:37.000Z</updated>
-        <content type="html"><![CDATA[<h2 id="相同点">相同点：</h2>
-<ul>
-<li>功能测试层面而言：APP测试和web测试都是使用相同的测试用例测试方法（都用到等价类划分、边界值分析、正常和异常情况去考虑测试点）</li>
-<li>UI界面测试：都需要按照原型图和设计图检查UI，包括布局、风格和按钮等是否简洁美观、是否统一</li>
-<li>性能测试（服务器后台的性能测试）：加载翻页的速度、登录时长、内存是否溢出等，测试系统的稳定性</li>
-<li>安全测试：后台接口安全测试方式基本一致</li>
-</ul>
-<h2 id="不同点">不同点：</h2>
-<p>1.系统结构而言：web项目是基于B/S架构的，而app项目是C/S架构的</p>
-<p>2.APP基本的功能点测试外，还有属于app的特性测试<br>
-A）全新安装/卸载测试，升级测试、第三方软件安装测试等<br>
-B）对指纹、手势等独有的登录方式进行测试、单点多点登录<br>
-C）触控操作测试，两指三指长按短按、以及横竖屏等的测试<br>
-D）消息推送测试，测试在不同的手机推送方式下，用户能否正常接收正常查看推送</p>
-<p>3.兼容性测试：web项目考虑不同浏览器的兼容，app需要考虑不同操作系统、机型、屏幕、分辨率的兼容</p>
-<p>4.中断测试：来电接收信息低电量等操作会对app应用程序产生影响，所以要考虑人为中断、新任务中断以及意外中断等情况对app进行测试，包括前后台切换、横竖屏切换、待机等测试</p>
-<p>5.网络测试：4G与WIFI之间切换网络测试、无网测试、弱网（延迟丢包）测试、离线测试</p>
-<p>6.权限测试：手机权限测试包括扣费风险、隐私泄露、相册访问、录音定位允许</p>
-<p>7.安全测试：app中安装包是否可反编译代码、防二次打包、防内存篡改等</p>
-<p>8.性能测试：需要进行app客户端性能测试，包括app安装卸载响应时间、cpu内存电量的占用，需要使用专门的性能测试工具GT、instrument等工具。</p>
-<p>9.测试工具方面：app自动化工具使用Appium，Web一般使用Selenium</p>
-<hr>
-<p>本人CSDN中有相同内容博客：https://blog.csdn.net/weizhi3320/article/details/106016807</p>
 ]]></content>
     </entry>
 </feed>
